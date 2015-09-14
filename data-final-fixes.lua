@@ -34,25 +34,26 @@ if NEConfig.Spawners then
 		
 	-- Biter Spawner Adjustments
 		data.raw["unit-spawner"]["biter-spawner"].max_count_of_owned_units = 30
-		data.raw["unit-spawner"]["biter-spawner"].max_friends_around_to_spawn = 20
+		data.raw["unit-spawner"]["biter-spawner"].max_friends_around_to_spawn = 40
 		data.raw["unit-spawner"]["biter-spawner"].spawning_cooldown = {500, 150}
 		data.raw["unit-spawner"]["biter-spawner"].max_health = 2500
 		data.raw["unit-spawner"]["biter-spawner"].spawning_radius = 25
 		data.raw["unit-spawner"]["biter-spawner"].spawning_spacing = 2
-		data.raw["unit-spawner"]["biter-spawner"].max_spawn_shift = 0.65
+		--data.raw["unit-spawner"]["biter-spawner"].max_spawn_shift = 0.65
 		--data.raw["unit-spawner"]["biter-spawner"].pollution_cooldown = 8
 
 		-- Spitter Spawner Adjustments
 		data.raw["unit-spawner"]["spitter-spawner"].max_count_of_owned_units = 20
-		data.raw["unit-spawner"]["spitter-spawner"].max_friends_around_to_spawn = 15
+		data.raw["unit-spawner"]["spitter-spawner"].max_friends_around_to_spawn = 30
 		data.raw["unit-spawner"]["spitter-spawner"].spawning_cooldown = {600, 180}
 		data.raw["unit-spawner"]["spitter-spawner"].max_health = 3500
 		data.raw["unit-spawner"]["spitter-spawner"].spawning_radius = 20
 		data.raw["unit-spawner"]["spitter-spawner"].spawning_spacing = 2
-		data.raw["unit-spawner"]["spitter-spawner"].max_spawn_shift = 0.65
+		--data.raw["unit-spawner"]["spitter-spawner"].max_spawn_shift = 0.65
 		--data.raw["unit-spawner"]["spitter-spawner"].pollution_cooldown = 8
 
 	end
+	
 	-- Bob's Enemies Modifications
 	if NEConfig.mod.BobEnemies and NEConfig.mod.DyTechWar then
 
@@ -91,7 +92,7 @@ if NEConfig.Spawners then
 	data.raw["unit-spawner"]["bob-biter-spawner"].max_health = 2500
 	data.raw["unit-spawner"]["bob-biter-spawner"].spawning_radius = 25
 	data.raw["unit-spawner"]["bob-biter-spawner"].spawning_spacing = 2
-	data.raw["unit-spawner"]["bob-biter-spawner"].max_spawn_shift = 0.65
+	--data.raw["unit-spawner"]["bob-biter-spawner"].max_spawn_shift = 0.65
 	--data.raw["unit-spawner"]["bob-biter-spawner"].pollution_cooldown = 8
 
 	-- Bob's Spitter Spawner Adjustments
@@ -101,7 +102,7 @@ if NEConfig.Spawners then
 	data.raw["unit-spawner"]["bob-spitter-spawner"].max_health = 3500
 	data.raw["unit-spawner"]["bob-spitter-spawner"].spawning_radius = 20
 	data.raw["unit-spawner"]["bob-spitter-spawner"].spawning_spacing = 2
-	data.raw["unit-spawner"]["bob-spitter-spawner"].max_spawn_shift = 0.65
+	--data.raw["unit-spawner"]["bob-spitter-spawner"].max_spawn_shift = 0.65
 	--data.raw["unit-spawner"]["bob-spitter-spawner"].pollution_cooldown = 8
 
 	end
@@ -177,6 +178,11 @@ data.raw["unit"]["behemoth-spitter"].pollution_to_join_attack = 5000
 		data.raw["unit"]["bob-biggest-spitter"].pollution_to_join_attack = 2500
 		data.raw["unit"]["bob-poison-spitter"].pollution_to_join_attack = 5000
 
+		if NEConfig.Spawners then
+			require "prototypes.Vanilla_Changes.Bobs_Spawners"				
+		end
+
+		
 	end
 
 

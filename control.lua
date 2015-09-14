@@ -319,7 +319,7 @@ function Control_Enemies()
 
       if beacon.energy > 0 then
         
-		local bases = surface.find_entities_filtered{type="unit-spawner", area=Get_Bounding_Box(beacon.position, NEConfig.Spawner_Search_Distance)} --search area of thirty around each beacon for spawners
+		local bases = surface.find_entities_filtered{type="unit-spawner", area=Get_Bounding_Box(beacon.position, NEConfig.Spawner_Search_Distance)} --search area of thirty around each ACS for spawners
 		
         if #bases > 0 then
           for i, base in ipairs(bases) do
@@ -330,7 +330,7 @@ function Control_Enemies()
           end
         else -- no bases in range 
        
-		  for i, enemy in ipairs(surface.find_enemy_units(beacon.position, NEConfig.Unit_Search_Distance)) do --search area of ten around each beacon
+		  for i, enemy in ipairs(surface.find_enemy_units(beacon.position, NEConfig.Unit_Search_Distance)) do --search area of ten around each ACS
 		  
             if enemy.force == (game.forces.enemy) then --do only if not already controlled
               if math.random(global.minds.difficulty*2)==1 then --easy = 16.5% chance, normal = 10%, hard = 5%

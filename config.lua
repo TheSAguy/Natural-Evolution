@@ -31,12 +31,12 @@ NE.HarderEndGame = true --Gets a lot harder once you build a rocket silo
 NE.EvolutionFactor = true 
 -- Do you want to use the new Evolution rate settings of:
 -- TIME: Only 75% of vanilla. From 0.000004 to 0.000003
--- POLLUTION: Triple the vanilla Pollution Evolution, so don't pollute! From 0.00003 to 0.000045
--- KILLING EMENY SPAWNERS: 25% of Vanilla increase for killing Enemy Spawners. From 0.002 to 0.0005
+-- POLLUTION: Quadruple the vanilla Pollution Evolution, so don't pollute! From 0.00003 to 0.00006
+-- KILLING EMENY SPAWNERS: 10% of Vanilla for killing Enemy Spawners. From 0.002 to 0.0002
 NE.DyTechWar_Evo_override = false
--- Will use DyTech Evolution Factor values and not Natural Evolution's values.
+-- If true, will use DyTech Evolution Factor values and not Natural Evolution's values.
 -- DyTech's values are linear, meaning at Difficulty 1 all 3 values are 1/4 of Vanilla and at Difficulty 5 they are 5x higher than vanilla's. 
--- N.E. on the other hand had a higher Pollution penalty, but lower Time and Killing Spawner values.
+-- N.E. on the other hand has a higher Pollution penalty, but lower Time and Killing Spawner values.
 
 
 NE.Spawners = true 
@@ -50,6 +50,8 @@ NE.Spawners = true
 NE.BiterSpitter = true 
 -- Do you want tweaks made to the games biter & spitters
 -- Lower Pollution levels before attacking.
+-- New Enemy Units
+-- Adjusted Resistances of units
 
 
 NE.Expansion = true 
@@ -59,8 +61,8 @@ NE.Expansion = true
 
 
 --- Alien_Control_Station settings
-NE.Spawner_Search_Distance = 30
-NE.Unit_Search_Distance = 20
+NE.Spawner_Search_Distance = 30 -- Radius
+NE.Unit_Search_Distance = 20 -- Radius
 NE.Conversion_Difficulty = Hard  -- Easy , Normal or Hard
 -- Spawner Conversion: Easy = 16.5% chance, Normal = 10%, Hard = 5%
 -- Unit Conversion: Easy = 16.5% chance, Normal = 10%, Hard = 5%
