@@ -73,12 +73,13 @@ end
       global.Evolution_MOD = {}
 	end
 	
+	--[[
 	for i = 1, #game.players, 1 do
         if game.players[i].force.technologies["Alien_Training"].researched then
            game.players[i].force.recipes["attractor-on2"].enabled = true
         end
     end
-	
+	]]
 	--- Harder End Game
 	if not global.RocketSiloBuilt then
       global.RocketSiloBuilt = 0
