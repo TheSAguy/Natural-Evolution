@@ -1,4 +1,4 @@
---- v.4.3.2
+--- v.4.3.3
 require "defines"
 require "util"
 NEConfig = {}
@@ -62,6 +62,7 @@ function On_Load()
 
  local surface = game.surfaces['nauvis'] 
 
+ -- Make sure all recipes and technologies are up to date.
 	for _,player in pairs(game.players) do
 	player.force.reset_recipes()
 	player.force.reset_technologies()
@@ -80,12 +81,7 @@ end
         end
     end
 	]]
-	--- Harder End Game
-	if not global.RocketSiloBuilt then
-      global.RocketSiloBuilt = 0
-	end
- 
-
+	
 	---- Alien Control Initialization ----	
 	if not global.beacons then
       global.beacons = {}
@@ -130,11 +126,16 @@ end
 		end
 	end
 
+		--- Harder End Game
 	---- Rocket Silo Initialization ----	
 	if not global.RocketSilos then
       global.RocketSilos = {}
 	end
-		
+
+	if not global.RocketSiloBuilt then
+      global.RocketSiloBuilt = 0
+	end
+ 	
 	
 end
 
@@ -145,15 +146,19 @@ function On_Built(event)
   if NEConfig.HarderEndGame then
    if event.created_entity.name == "rocket-silo" then
    		table.insert(global.RocketSilos,event.created_entity)
-	  	game.get_surface(1).set_multi_command({type=defines.command.attack,target=global.RocketSilos[1],distraction=defines.distraction.none},2000)
-		--game.get_surface(1).set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
+	  	global.RocketSiloBuilt = global.RocketSiloBuilt + 1
 		
-		game.evolution_factor = game.evolution_factor + 0.1
-		global.RocketSiloBuilt = global.RocketSiloBuilt + 1
-		if game.evolution_factor > .9999 then
-			game.evolution_factor = .9999
-		end  
+		-- Increase Evolution factor by 10% once a Rocket Silo is built
 		
+			if game.evolution_factor < 0.89999 then
+				game.evolution_factor = game.evolution_factor + 0.1
+			else
+				game.evolution_factor = 0.9999
+			end  
+
+		 -- Biters will attack the newly built Rocket Silo
+		game.get_surface(1).set_multi_command({type=defines.command.attack,target=global.RocketSilos[1],distraction=defines.distraction.none},2000)
+				
 		game.player.print("WARNING!")
 		game.player.print("Building a Rocket Silo caused a lot of noise and biter will Attack!!!")
    end
@@ -203,6 +208,13 @@ function On_Removed(event)
       global.numTerraformingStations = global.numTerraformingStations - 1
       global.factormultiplier = GetFactorPerTerraformingStation(global.numTerraformingStations)
    end
+   
+   ---- Remove Rocket Silo count
+   if event.entity.name == "rocket-silo" then
+         global.RocketSiloBuilt = global.RocketSiloBuilt - 1      
+		 writeDebug("The number of Rocket Silos is: " .. global.RocketSiloBuilt)	
+   end
+      	  	
    
    --- Alien Control Station has been removed
 	if event.entity.name == "AlienControlStation" then
@@ -284,7 +296,7 @@ function GetFactorPerTerraformingStation(numTerraformingStations)
    -- Calculate the total evolution reduction.
    if numTerraformingStations > 1 then
 	for i = 1, numTerraformingStations do
-      res = res + math.pow(0.9, i) 
+      res = res + math.pow(0.9, i) -- Each consecutive Terraforming station is only 90% as effective.
 	end
    end
 
@@ -296,15 +308,16 @@ end
 
 ---- Each time a Terraforming Station scans a sector, reduce the evolution factor ----
 game.on_event(defines.events.on_sector_scanned, function(event)
-  if event.radar.name == "TerraformingStation" then
-   game.evolution_factor = game.evolution_factor - ((0.000125 * global.factormultiplier) * (1 - game.evolution_factor))
-		if game.evolution_factor < .0001 then
-			game.evolution_factor = .0001
-		end  
-
-  writeDebug("The current Factor Multiplier is: " .. global.factormultiplier)
+	if event.radar.name == "TerraformingStation" then
    
-  end
+   			if game.evolution_factor > 0.05 then
+				game.evolution_factor = game.evolution_factor - ((0.000125 * global.factormultiplier) * (1 - game.evolution_factor))
+			else
+				game.evolution_factor = .0001
+			end 
+   
+		writeDebug("The current Factor Multiplier is: " .. global.factormultiplier)   
+	end
 end)
 --------------- END Terraforming Station ------------------------------
 
@@ -467,6 +480,7 @@ game.on_event(defines.events.on_tick, function(event)
 			end
 		end
 	end
+	
 --------------- Expansion ----------------------------------------------
 	if NEConfig.Expansion then	
 		if (game.tick % (60 * 60)  == 0) and (game.evolution_factor >= .005) and (global.Natural_Evolution_state == "Peaceful") then
@@ -581,35 +595,34 @@ if NEConfig.Expansion then
 			global.Natural_Evolution_Timer = 0
 			
 			-- Each time a Phase is triggered, the Evolution Factor is decreased slightly, just during the Phase.
+			if game.evolution_factor > 0.05 then
 			
-			if global.Natural_Evolution_state == "Awakening" then
-				game.evolution_factor = game.evolution_factor		
-			elseif global.Natural_Evolution_state == "Phase 1" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			elseif global.Natural_Evolution_state == "Phase 2" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			elseif global.Natural_Evolution_state == "Phase 3" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			elseif global.Natural_Evolution_state == "Phase 4" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))			
-			elseif global.Natural_Evolution_state == "Phase 5" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			elseif global.Natural_Evolution_state == "Phase 6" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			elseif global.Natural_Evolution_state == "Phase 7" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			elseif global.Natural_Evolution_state == "Phase 8" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			elseif global.Natural_Evolution_state == "Phase 9" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			elseif global.Natural_Evolution_state == "Phase 10" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			elseif global.Natural_Evolution_state == "Armageddon" then
-				game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
-			end
-		
-			if game.evolution_factor < .0001 then
-				game.evolution_factor = .0001
+				if global.Natural_Evolution_state == "Awakening" then
+					game.evolution_factor = game.evolution_factor		
+				elseif global.Natural_Evolution_state == "Phase 1" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				elseif global.Natural_Evolution_state == "Phase 2" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				elseif global.Natural_Evolution_state == "Phase 3" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				elseif global.Natural_Evolution_state == "Phase 4" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))			
+				elseif global.Natural_Evolution_state == "Phase 5" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				elseif global.Natural_Evolution_state == "Phase 6" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				elseif global.Natural_Evolution_state == "Phase 7" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				elseif global.Natural_Evolution_state == "Phase 8" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				elseif global.Natural_Evolution_state == "Phase 9" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				elseif global.Natural_Evolution_state == "Phase 10" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				elseif global.Natural_Evolution_state == "Armageddon" then
+					game.evolution_factor = game.evolution_factor - (0.00012 * (1 - game.evolution_factor))
+				end
+						
 			end
 		
 		-- Defines the values for the different Evolution States.
@@ -635,11 +648,14 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 1" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
+				
 			end  
 			-----
 			game.map_settings.enemy_expansion.enabled = true
@@ -663,11 +679,14 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 2" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
+				
 			end  
 			-----
 			game.map_settings.enemy_expansion.enabled = true
@@ -691,11 +710,14 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 3" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
+				
 			end   
 			-----
 			game.map_settings.enemy_expansion.enabled = true
@@ -719,12 +741,15 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 4" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
-			end  
+				
+			end   
 			-----
 			game.map_settings.enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(4 * 3600, 6 * 3600)
@@ -747,11 +772,14 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 5" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
+				
 			end  
 			-----
 			game.map_settings.enemy_expansion.enabled = true
@@ -775,11 +803,14 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 6" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
+				
 			end  
 			-----
 			game.map_settings.enemy_expansion.enabled = true
@@ -803,11 +834,14 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 7" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
+				
 			end  
 			-----
 			game.map_settings.enemy_expansion.enabled = true
@@ -831,11 +865,14 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 8" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
+				
 			end  
 			-----
 			game.map_settings.enemy_expansion.enabled = true
@@ -859,11 +896,14 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 9" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
+				
 			end  
 			-----
 			game.map_settings.enemy_expansion.enabled = true
@@ -887,11 +927,14 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Phase 10" then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
+				if game.evolution_factor < 0.9899 then
+					game.evolution_factor = game.evolution_factor + 0.01
+				else
+				game.evolution_factor = 0.99999
+				end  	
+				---- Attack the player, since you have a silo built
 				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				game.evolution_factor = game.evolution_factor + 0.025	
-				if game.evolution_factor > .9999 then
-					game.evolution_factor = .9999
-				end  				
+				
 			end  
 			-----
 			game.map_settings.enemy_expansion.enabled = true
@@ -914,6 +957,7 @@ if NEConfig.Expansion then
 			
 		
 		elseif Expansion_State == "Armageddon" then
+			--- During Armageddon state the player will be attached regardless of Silo built or not.
 			game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
 			game.map_settings.enemy_expansion.enabled = true					 
 			global.Natural_Evolution_Timer = math.random(6 * 3600, 8 * 3600)
