@@ -147,7 +147,7 @@ function On_Built(event)
    if event.created_entity.name == "rocket-silo" then
    		table.insert(global.RocketSilos,event.created_entity)
 	  	global.RocketSiloBuilt = global.RocketSiloBuilt + 1
-		
+		writeDebug("The number of Rocket Silos is: " .. global.RocketSiloBuilt)	
 		-- Increase Evolution factor by 10% once a Rocket Silo is built
 		
 			if game.evolution_factor < 0.89999 then
@@ -214,7 +214,10 @@ function On_Removed(event)
          global.RocketSiloBuilt = global.RocketSiloBuilt - 1      
 		 writeDebug("The number of Rocket Silos is: " .. global.RocketSiloBuilt)	
    end
-      	  	
+	if event.entity.name == "rocket-silo" then
+		RocketSilo_Remove()
+	end
+   
    
    --- Alien Control Station has been removed
 	if event.entity.name == "AlienControlStation" then
@@ -284,6 +287,29 @@ function ACS_Remove(index)
     if not beacon.valid then
       table.remove(global.beacons,k)
       writeDebug("Alien Control Station Removed")
+    end
+  end
+  
+end
+
+function RocketSilo_Remove(index)
+
+  if index then
+    if global.RocketSilos[index] and not global.RocketSilos[index].valid then
+      table.remove(global.RocketSilos, index)
+      return -- if an index was found and it's entity was not valid return after removing it
+    end
+  end
+  -- if no index was provided, or an inappropriate index was provided then loop through the table
+
+  for k,RocketSilo in ipairs(global.RocketSilos) do
+    if not RocketSilo.valid then
+      table.remove(global.RocketSilos,k)
+	  			if #global.RocketSilos == 0 then
+					global.RocketSilos = nil
+
+				end
+		writeDebug("Rocket Silo Removed")
     end
   end
   
