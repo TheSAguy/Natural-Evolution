@@ -27,7 +27,7 @@ bigspitterMk2tint = {r=0.74, g=0.58, b=0.85, a=0.6}
 bigspitterMk3scale = 1.1
 bigspitterMk3tint = {r=0.94, g=0.58, b=0.85, a=0.6}
 
-behemothspitterscale = 1.3
+behemothspitterscale = 2
 behemothspittertint = {r=0.3, g=0.9, b=0.3, a=0.75}
 
 

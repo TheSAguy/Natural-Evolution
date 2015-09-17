@@ -40,7 +40,7 @@ big_biter_Mk3_tint2 = {r=0.31, g=0.61, b=0.35, a=0.85}
 
 
 
-behemothbiterscale = 1.3
+behemothbiterscale = 2
 behemoth_biter_tint1 = {r=0.3, g=0.9, b=0.3, a=0.75}
 behemoth_biter_tint2 = {r=0.88, g=0.24, b=0.24, a=0.9}
 

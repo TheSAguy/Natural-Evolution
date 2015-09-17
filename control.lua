@@ -74,14 +74,6 @@ end
       global.Evolution_MOD = {}
 	end
 	
-	--[[
-	for i = 1, #game.players, 1 do
-        if game.players[i].force.technologies["Alien_Training"].researched then
-           game.players[i].force.recipes["attractor-on2"].enabled = true
-        end
-    end
-	]]
-	
 	---- Alien Control Initialization ----	
 	if not global.beacons then
       global.beacons = {}
@@ -128,10 +120,6 @@ end
 
 		--- Harder End Game
 	---- Rocket Silo Initialization ----	
-	if not global.RocketSilos then
-      global.RocketSilos = {}
-	end
-
 	if not global.RocketSiloBuilt then
       global.RocketSiloBuilt = 0
 	end
@@ -145,11 +133,9 @@ function On_Built(event)
    --- Harder Ending Some action if you built the Rocket-silo!
   if NEConfig.HarderEndGame then
    if event.created_entity.name == "rocket-silo" then
-   		table.insert(global.RocketSilos,event.created_entity)
 	  	global.RocketSiloBuilt = global.RocketSiloBuilt + 1
-		
-		-- Increase Evolution factor by 10% once a Rocket Silo is built
-		
+		writeDebug("The number of Rocket Silos is: " .. global.RocketSiloBuilt)	
+		-- Increase Evolution factor by 10% once a Rocket Silo is built	
 			if game.evolution_factor < 0.89999 then
 				game.evolution_factor = game.evolution_factor + 0.1
 			else
@@ -157,8 +143,8 @@ function On_Built(event)
 			end  
 
 		 -- Biters will attack the newly built Rocket Silo
-		game.get_surface(1).set_multi_command({type=defines.command.attack,target=global.RocketSilos[1],distraction=defines.distraction.none},2000)
-				
+		game.get_surface(1).set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
+		
 		game.player.print("WARNING!")
 		game.player.print("Building a Rocket Silo caused a lot of noise and biter will Attack!!!")
    end
@@ -214,8 +200,7 @@ function On_Removed(event)
          global.RocketSiloBuilt = global.RocketSiloBuilt - 1      
 		 writeDebug("The number of Rocket Silos is: " .. global.RocketSiloBuilt)	
    end
-      	  	
-   
+    
    --- Alien Control Station has been removed
 	if event.entity.name == "AlienControlStation" then
 		ACS_Remove()
@@ -371,7 +356,7 @@ function Remove_Mind_Control()
    local surface = game.surfaces['nauvis'] 
   
   if global.beacons[1] then -- if there are valid beacons
-    for k,mind in ipairs (global.minds) do --remove mindcontrol from biters not in area of influence
+    for k,mind in ipairs (global.minds) do --remove mind control from biters not in area of influence
       if not mind.valid then --first make sure the enemy is still valid, if not remove them
         table.remove(global.minds, k)
       else -- is valid
@@ -386,7 +371,6 @@ function Remove_Mind_Control()
   end
 end
 
---function Convert_Base(base, died)
 function Convert_Base(base, died, newforce)
   
   local surface = game.surfaces['nauvis'] 
@@ -421,23 +405,23 @@ function Convert_Base(base, died, newforce)
   end
   
   if count~=0 and math.random(1+math.sqrt(count))==1 then
-  --  if died then table.insert(global.hiveminds, game.create_entity{name=base.name, position=base.position, force=game.player.force}) end
+
     if died then 
 	  table.insert(global.hiveminds, game.create_entity{name=base.name, position=base.position, force=game.newforce}) 
 	end
 	for _, worm in pairs(worms) do 
-	  --worm.force=game.player.force 
+
 	  worm.force=newforce 
 	  writeDebug("Turret/Worm Converted") 
 	end
     for _, hive in pairs(hives) do 
-	  --hive.force=game.player.force 
+
 	  hive.force=newforce  
 	  table.insert(global.hiveminds, hive) 
 	  writeDebug("Spawner Converted") 
 	end
     for _, unit in pairs(units) do
-      --unit.force=game.player.force
+
 	  unit.force=newforce
       unit.set_command{type=defines.command.wander, distraction=defines.distraction.by_enemy}
       -- remove mind controlled biters in range from the minds table
@@ -649,12 +633,12 @@ if NEConfig.Expansion then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
 				if game.evolution_factor < 0.9899 then
-					game.evolution_factor = game.evolution_factor + 0.01
+					game.evolution_factor = game.evolution_factor + 0.1
 				else
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},100)
 				
 			end  
 			-----
@@ -680,12 +664,12 @@ if NEConfig.Expansion then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
 				if game.evolution_factor < 0.9899 then
-					game.evolution_factor = game.evolution_factor + 0.01
+					game.evolution_factor = game.evolution_factor + 0.1
 				else
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},200)
 				
 			end  
 			-----
@@ -711,12 +695,12 @@ if NEConfig.Expansion then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
 				if game.evolution_factor < 0.9899 then
-					game.evolution_factor = game.evolution_factor + 0.01
+					game.evolution_factor = game.evolution_factor + 0.05
 				else
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},400)
 				
 			end   
 			-----
@@ -742,12 +726,12 @@ if NEConfig.Expansion then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
 				if game.evolution_factor < 0.9899 then
-					game.evolution_factor = game.evolution_factor + 0.01
+					game.evolution_factor = game.evolution_factor + 0.05
 				else
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},500)
 				
 			end   
 			-----
@@ -773,12 +757,12 @@ if NEConfig.Expansion then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
 				if game.evolution_factor < 0.9899 then
-					game.evolution_factor = game.evolution_factor + 0.01
+					game.evolution_factor = game.evolution_factor + 0.025
 				else
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},600)
 				
 			end  
 			-----
@@ -804,12 +788,12 @@ if NEConfig.Expansion then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
 				if game.evolution_factor < 0.9899 then
-					game.evolution_factor = game.evolution_factor + 0.01
+					game.evolution_factor = game.evolution_factor + 0.025
 				else
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},700)
 				
 			end  
 			-----
@@ -835,12 +819,12 @@ if NEConfig.Expansion then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
 				if game.evolution_factor < 0.9899 then
-					game.evolution_factor = game.evolution_factor + 0.01
+					game.evolution_factor = game.evolution_factor + 0.015
 				else
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},800)
 				
 			end  
 			-----
@@ -866,12 +850,12 @@ if NEConfig.Expansion then
 			----- Harder Ending
 			if global.RocketSiloBuilt > 0 then
 				if game.evolution_factor < 0.9899 then
-					game.evolution_factor = game.evolution_factor + 0.01
+					game.evolution_factor = game.evolution_factor + 0.015
 				else
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},900)
 				
 			end  
 			-----
@@ -902,7 +886,7 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},1000)
 				
 			end  
 			-----
