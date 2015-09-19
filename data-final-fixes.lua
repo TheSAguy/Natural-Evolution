@@ -145,27 +145,38 @@ end
 ---- Biter & Spitter Modifications --------------------------------
 if NEConfig.BiterSpitter then
 	
-	if NEConfig.mod.DyTechWar then
 
--- Vanilla Unit Adjustments
-data.raw["unit"]["small-biter"].resistances = Resistances.Small_Biter
-data.raw["unit"]["medium-biter"].resistances = Resistances.Medium_Biter
-data.raw["unit"]["big-biter"].resistances = Resistances.Big_Biter
-data.raw["unit"]["behemoth-biter"].resistances = Resistances.Behemoth_Biter
-data.raw["unit"]["small-spitter"].resistances = Resistances.Small_Spitter
-data.raw["unit"]["medium-spitter"].resistances = Resistances.Medium_Spitter
-data.raw["unit"]["big-spitter"].resistances = Resistances.Big_Spitter
-data.raw["unit"]["behemoth-spitter"].resistances = Resistances.Behemoth_Spitter
-	end
+	-- Vanilla Unit Adjustments
+	data.raw["unit"]["small-biter"].resistances = Resistances.Small_Biter
+	data.raw["unit"]["small-biter"].max_health = Health.Small_Biter
+
+	data.raw["unit"]["medium-biter"].resistances = Resistances.Medium_Biter
+	data.raw["unit"]["medium-biter"].max_health = Health.Medium_Biter
+	data.raw["unit"]["medium-biter"].pollution_to_join_attack = 800
+
+	data.raw["unit"]["big-biter"].resistances = Resistances.Big_Biter
+	data.raw["unit"]["big-biter"].max_health = Health.Big_Biter
+	data.raw["unit"]["big-biter"].pollution_to_join_attack = 1000
+
+	data.raw["unit"]["behemoth-biter"].resistances = Resistances.Behemoth_Biter
+	data.raw["unit"]["behemoth-biter"].max_health = Health.Behemoth_Biter
+	data.raw["unit"]["behemoth-biter"].pollution_to_join_attack = 2500
 
 
 
-data.raw["unit"]["medium-biter"].pollution_to_join_attack = 800
-data.raw["unit"]["big-biter"].pollution_to_join_attack = 1000
-data.raw["unit"]["behemoth-biter"].pollution_to_join_attack = 2500
+	data.raw["unit"]["small-spitter"].resistances = Resistances.Small_Spitter
+	data.raw["unit"]["small-spitter"].max_health = Health.Small_Spitter
 
-data.raw["unit"]["big-spitter"].pollution_to_join_attack = 1200
-data.raw["unit"]["behemoth-spitter"].pollution_to_join_attack = 5000
+	data.raw["unit"]["medium-spitter"].resistances = Resistances.Medium_Spitter
+	data.raw["unit"]["medium-spitter"].max_health = Health.Medium_Spitter
+
+	data.raw["unit"]["big-spitter"].resistances = Resistances.Big_Spitter
+	data.raw["unit"]["big-spitter"].max_health = Health.Big_Spitter
+	data.raw["unit"]["big-spitter"].pollution_to_join_attack = 1200
+
+	data.raw["unit"]["behemoth-spitter"].resistances = Resistances.Behemoth_Spitter
+	data.raw["unit"]["behemoth-spitter"].max_health = Health.Behemoth_Spitter
+	data.raw["unit"]["behemoth-spitter"].pollution_to_join_attack = 5000
 
 
 -- Bob's Enemies Modifications
@@ -194,10 +205,9 @@ data.raw["unit"]["behemoth-spitter"].pollution_to_join_attack = 5000
 		require "prototypes.Vanilla_Changes.Biter_Evolution"
 		require "prototypes.Vanilla_Changes.New_Spitter_Units"
 		require "prototypes.Vanilla_Changes.Spitter_Evolution"
-		
-
-		
+	
 	end
+		
 end
 		
 		--- Extra Loot

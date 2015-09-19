@@ -50,6 +50,7 @@ behemoth_biter_tint2 = {r=0.88, g=0.24, b=0.24, a=0.9}
 data:extend(
 {
 --- Vanilla Small Biter
+--[[
  {
     type = "unit",
     name = "small-biter",
@@ -83,6 +84,7 @@ data:extend(
     working_sound =  make_biter_calls(0.7),
     run_animation = biterrunanimation(smallbiterscale, small_biter_tint1, small_biter_tint2)
   },
+--]]
 
 --- New Small Biter 1
   {
@@ -155,6 +157,7 @@ data:extend(
   },
  
 --- Vanilla Medium Biter 
+--[[
  {
     type = "unit",
     name = "medium-biter",
@@ -190,7 +193,7 @@ data:extend(
     dying_sound = make_biter_dying_sounds(1.0),
     run_animation = biterrunanimation(mediumbiterscale, medium_biter_tint1, medium_biter_tint2)
   },
- 
+ --]]
  --- New Medium Biter 1
    {
     type = "unit",
@@ -266,6 +269,7 @@ data:extend(
   },
 
   ------ Vanilla Big Biter 
+  --[[
   {
     type = "unit",
     name = "big-biter",
@@ -302,7 +306,7 @@ data:extend(
     dying_sound = make_biter_dying_sounds(1.0),
     run_animation = biterrunanimation(bigbiterscale, big_biter_tint1, big_biter_tint2)
   },
-
+--]]
   ----- New Big Biter 1
   {
     type = "unit",
@@ -381,7 +385,7 @@ data:extend(
   },
 
   --- Vanilla Behemoth Biter
-  
+  --[[
   {
     type = "unit",
     name = "behemoth-biter",
@@ -418,7 +422,7 @@ data:extend(
     dying_sound = make_biter_dying_sounds(1.0),
     run_animation = biterrunanimation(behemothbiterscale, behemoth_biter_tint1, behemoth_biter_tint2)
   },
-
+--]]
 })
   
 

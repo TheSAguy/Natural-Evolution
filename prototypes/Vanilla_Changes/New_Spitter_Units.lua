@@ -36,6 +36,7 @@ data:extend(
 {
 
 ---- Vanilla Small Spitter
+--[[
   {
     type = "unit",
     name = "small-spitter",
@@ -67,7 +68,7 @@ data:extend(
     dying_sound = make_spitter_dying_sounds(1.0),
     run_animation = spitterrunanimation(smallspitterscale, smallspittertint)
   },
-
+--]]
 ---- New Small Spitter 1
   {
     type = "unit",
@@ -135,6 +136,7 @@ data:extend(
   },
 
 ---- Vanilla Medium Spitter
+--[[
   {
     type = "unit",
     name = "medium-spitter",
@@ -166,7 +168,7 @@ data:extend(
     dying_sound = make_spitter_dying_sounds(1.0),
     run_animation = spitterrunanimation(mediumspitterscale, mediumspittertint)
   },
-
+--]]
 --- New Medium Spitter 1  
   {
     type = "unit",
@@ -234,6 +236,7 @@ data:extend(
   },
 
   --- Vanilla Big Spitter
+  --[[
    {
     type = "unit",
     name = "big-spitter",
@@ -266,7 +269,7 @@ data:extend(
     dying_sound = make_spitter_dying_sounds(1.0),
     run_animation = spitterrunanimation(bigspitterscale, bigspittertint)
   },
-  
+  --]]
   --- New Big Spitter 1
   {
     type = "unit",
@@ -336,6 +339,7 @@ data:extend(
   },
   
   --- Vanilla Behemoth Spitter
+  --[[
   {
     type = "unit",
     name = "behemoth-spitter",
@@ -366,7 +370,7 @@ data:extend(
     dying_sound = make_spitter_dying_sounds(1.0),
     run_animation = spitterrunanimation(behemothspitterscale, behemothspittertint)
   },
-
+--]]
 
 })
   
