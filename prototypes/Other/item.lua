@@ -33,4 +33,43 @@ data:extend({
 		stack_size = 1
 	},
 
+	--- Biological Bullet
+	{
+		type = "ammo",
+		name = "Biological-bullet-magazine",
+		icon = "__base__/graphics/icons/piercing-bullet-magazine.png",
+		flags = {"goes-to-main-inventory"},
+		ammo_type =
+		{
+		  category = "bullet",
+		  action =
+		  {
+			type = "direct",
+			action_delivery =
+			{
+			  type = "instant",
+			  source_effects =
+			  {
+				  type = "create-explosion",
+				  entity_name = "explosion-gunshot"
+			  },
+			  target_effects =
+			  {
+				{
+				  type = "create-entity",
+				  entity_name = "explosion-hit"
+				},
+				{
+				  type = "damage",
+				  damage = { amount = 25 , type = "fire"}
+				}
+			  }
+			}
+		  }
+		},
+		magazine_size = 10,
+		subgroup = "ammo",
+		order = "a[basic-clips]-b[piercing-bullet-magazine]-c[Biological-bullet-magazine]",
+		stack_size = 100
+  },
 })

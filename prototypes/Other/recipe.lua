@@ -18,7 +18,7 @@ data:extend({
 	
 
 	--- Attractors
-	{
+	--[[{
 		type = "recipe",
 		name = "attractor-on2",
 		enabled = "false",
@@ -28,7 +28,7 @@ data:extend({
 		},
 		result = "attractor-on",
 		energy_required = 0.5,
-	},
+	},]]
 	{
 		type = "recipe",
 		name = "attractor-on",
@@ -52,6 +52,20 @@ data:extend({
 		result = "attractor-off",
 		energy_required = 0.5,
 	},
-
+	
+	--- Biological Bullet
+	{
+		type = "recipe",
+		name = "Biological-bullet-magazine",
+		enabled = false,
+		energy_required = 5,
+		ingredients =
+		{
+		  {"alien-artifact", 1},
+		  {"piercing-bullet-magazine", 5}
+		},
+		result = "Biological-bullet-magazine"
+		result_count = 5
+  },
 	
 })
