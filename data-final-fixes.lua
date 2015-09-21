@@ -143,7 +143,7 @@ end
 
 
 ---- Biter & Spitter Modifications --------------------------------
-if NEConfig.BiterSpitter then
+if NEConfig.Spawners then
 	
 
 	-- Vanilla Unit Adjustments
@@ -189,7 +189,7 @@ if NEConfig.BiterSpitter then
 		data.raw["unit"]["bob-biggest-spitter"].pollution_to_join_attack = 2500
 		data.raw["unit"]["bob-poison-spitter"].pollution_to_join_attack = 5000
 
-		if NEConfig.Spawners then
+		if NEConfig.Spawners and not NEConfig.mod.DyTechWar then
 			require "prototypes.Vanilla_Changes.Bobs_Spawners"				
 		end
 

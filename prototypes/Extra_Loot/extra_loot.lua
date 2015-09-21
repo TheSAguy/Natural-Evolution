@@ -375,30 +375,30 @@ if NEConfig.mod.DyTechWar then
 		table.insert(data.raw.unit["adult-queen-spitter"].loot, lootD)
 	end
 	--- DyZilla
+	--- Currently disabled.
 	
-	
-	if data.raw.unit~=nil then
+	if data.raw.unit["dyzilla-unit-1"]~=nil then
 		if data.raw.unit["dyzilla-unit-1"].loot == nil then 
 			data.raw.unit["dyzilla-unit-1"].loot = {}
 		end
 		table.insert(data.raw.unit["dyzilla-unit-1"].loot, lootD)
 	end
 	
-	if data.raw.unit~=nil then
+	if data.raw.unit["dyzilla-unit-2"]~=nil then
 		if data.raw.unit["dyzilla-unit-2"].loot == nil then 
 			data.raw.unit["dyzilla-unit-2"].loot = {}
 		end
 		table.insert(data.raw.unit["dyzilla-unit-2"].loot, lootD)
 	end
 	
-	if data.raw.unit~=nil then
+	if data.raw.unit["dyzilla-unit-3"]~=nil then
 		if data.raw.unit["dyzilla-unit-3"].loot == nil then 
 			data.raw.unit["dyzilla-unit-3"].loot = {}
 		end
 		table.insert(data.raw.unit["dyzilla-unit-3"].loot, lootD)
 	end
 	
-	if data.raw.unit~=nil then
+	if data.raw.unit["dyzilla-unit-4"]~=nil then
 		if data.raw.unit["dyzilla-unit-4"].loot == nil then 
 			data.raw.unit["dyzilla-unit-4"].loot = {}
 		end

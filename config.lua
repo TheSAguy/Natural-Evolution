@@ -40,14 +40,12 @@ NE.DyTechWar_Evo_override = false
 
 
 NE.Spawners = true 
+-- Changes to the games Spawners and Units
 -- Do you want tweaks made to the spawners - Mainly more units around the spawners 
 -- More units around the spawners 
 -- Vanilla Spawners will be higher than currently.
 -- Bob's be higher and will be be adjusted to match DyTech's it you're playing with DyTech
 -- Currently not adjusting DyTech, until tested a little more 
-
-
-NE.BiterSpitter = true 
 -- Do you want tweaks made to the games biter & spitters
 -- Lower Pollution levels before attacking.
 -- New Enemy Units
