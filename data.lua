@@ -42,10 +42,11 @@ require("prototypes.Terraforming_Station.item")
 require("prototypes.Terraforming_Station.recipe")
 ---------------------------------------------------------------
 
-    --- Other - Building Materials and Attractors
+    --- Other - Building Materials, Attractors,  Biological Damage & Ammo
 
 require("prototypes.Other.item")
 require("prototypes.Other.recipe")
+require("prototypes.Other.damage-type")
 ---------------------------------------------------------------
 
 

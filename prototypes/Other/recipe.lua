@@ -49,6 +49,7 @@ data:extend({
 		ingredients =
 		{
 		  {"alien-artifact", 1},
+		  {"plastic-bar", 5},
 		  {"piercing-bullet-magazine", 5},
 		},
 		result = "Biological-bullet-magazine",

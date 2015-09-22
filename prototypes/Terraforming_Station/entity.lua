@@ -31,7 +31,7 @@ data:extend({
       type = "electric",
       usage_priority = "secondary-input"
     },
-    energy_usage = "400kW",
+    energy_usage = "600kW",
     pictures =
     {
       filename = "__Natural-Evolution__/graphics/entity/TerraformingStation.png",

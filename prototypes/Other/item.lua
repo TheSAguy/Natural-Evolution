@@ -61,7 +61,11 @@ data:extend({
 				},
 				{
 				  type = "damage",
-				  damage = { amount = 25 , type = "fire"}
+				  damage = { amount = 25 , type = "Biological"}
+				},
+				{
+				  type = "damage",
+				  damage = { amount = 5 , type = "physical"}
 				}
 			  }
 			}
