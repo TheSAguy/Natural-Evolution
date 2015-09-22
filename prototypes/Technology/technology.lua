@@ -35,6 +35,13 @@ data:extend({
 		type = "technology",
 		name = "AlienUnderstanding-2",
 		icon = "__Natural-Evolution__/graphics/technology/AlienUnderstanding.png",
+		effects =
+		{
+			{
+				type = 'unlock-recipe', 
+				recipe='Biological-bullet-magazine'
+			}
+		},
 		prerequisites = {"AlienUnderstanding"},
 		unit =
 		{

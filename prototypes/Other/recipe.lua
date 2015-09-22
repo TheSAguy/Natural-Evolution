@@ -14,21 +14,8 @@ data:extend({
 			{"steel-plate", 10}, 
 		  },
 		  result = "Building_Materials"
-  },
+	},
 	
-
-	--- Attractors
-	--[[{
-		type = "recipe",
-		name = "attractor-on2",
-		enabled = "false",
-		ingredients =
-		{
-		  {"iron-plate", 1},
-		},
-		result = "attractor-on",
-		energy_required = 0.5,
-	},]]
 	{
 		type = "recipe",
 		name = "attractor-on",
@@ -62,9 +49,9 @@ data:extend({
 		ingredients =
 		{
 		  {"alien-artifact", 1},
-		  {"piercing-bullet-magazine", 5}
+		  {"piercing-bullet-magazine", 5},
 		},
-		result = "Biological-bullet-magazine"
+		result = "Biological-bullet-magazine",
 		result_count = 5
   },
 	

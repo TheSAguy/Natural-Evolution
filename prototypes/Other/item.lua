@@ -37,7 +37,7 @@ data:extend({
 	{
 		type = "ammo",
 		name = "Biological-bullet-magazine",
-		icon = "__base__/graphics/icons/piercing-bullet-magazine.png",
+		icon = "__Natural-Evolution__/graphics/icons/Biological-bullet-magazine.png",
 		flags = {"goes-to-main-inventory"},
 		ammo_type =
 		{
