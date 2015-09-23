@@ -223,7 +223,7 @@ data:extend(
     movement_speed = 0.185,
     distance_per_frame = 0.15,
     -- in pu
-    pollution_to_join_attack = 1000,
+    pollution_to_join_attack = 800,
     corpse = "medium-biter-corpse",
     dying_explosion = "blood-explosion-small",
     working_sound = make_biter_calls(0.8),
@@ -260,7 +260,7 @@ data:extend(
     movement_speed = 0.185,
     distance_per_frame = 0.15,
     -- in pu
-    pollution_to_join_attack = 1000,
+    pollution_to_join_attack = 800,
     corpse = "medium-biter-corpse",
     dying_explosion = "blood-explosion-small",
     working_sound = make_biter_calls(0.8),
@@ -337,7 +337,7 @@ data:extend(
     movement_speed = 0.17,
     distance_per_frame = 0.2,
     -- in pu
-    pollution_to_join_attack = 4000,
+    pollution_to_join_attack = 1000,
     corpse = "big-biter-corpse",
     dying_explosion = "blood-explosion-big",
     working_sound = make_biter_calls(0.9),
@@ -376,7 +376,7 @@ data:extend(
     movement_speed = 0.17,
     distance_per_frame = 0.2,
     -- in pu
-    pollution_to_join_attack = 4000,
+    pollution_to_join_attack = 1000,
     corpse = "big-biter-corpse",
     dying_explosion = "blood-explosion-big",
     working_sound = make_biter_calls(0.9),

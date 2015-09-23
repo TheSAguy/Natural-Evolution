@@ -296,7 +296,7 @@ data:extend(
     movement_speed = 0.15,
     distance_per_frame = 0.05,
     -- in pu
-    pollution_to_join_attack = 1500,
+    pollution_to_join_attack = 1200,
     corpse = "big-spitter-corpse",
     dying_explosion = "blood-explosion-big",
     working_sound = make_biter_calls(0.9),
@@ -330,7 +330,7 @@ data:extend(
     movement_speed = 0.15,
     distance_per_frame = 0.05,
     -- in pu
-    pollution_to_join_attack = 1500,
+    pollution_to_join_attack = 1200,
     corpse = "big-spitter-corpse",
     dying_explosion = "blood-explosion-big",
     working_sound = make_biter_calls(0.9),

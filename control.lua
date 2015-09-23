@@ -479,63 +479,63 @@ game.on_event(defines.events.on_tick, function(event)
 			-- Evolution Factor = 1% - 9%:
 			elseif expansionChance >= 100 and expansionChance < 110 then
 				Natural_Evolution_SetExpansionLevel("Phase 1")
-				if game.evolution_factor >.1 and global.Natural_Evolution_Counter < 5 then
+				if game.evolution_factor >.1 and global.Natural_Evolution_Counter < 10 then
 				global.Natural_Evolution_Counter = global.Natural_Evolution_Counter + 1
 				end
 				
 			-- Evolution Factor = 10% - 19%:
 			elseif expansionChance >= 110 and expansionChance < 120 then
 				Natural_Evolution_SetExpansionLevel("Phase 2")
-				if game.evolution_factor >.2 and global.Natural_Evolution_Counter < 10 then
+				if game.evolution_factor >.2 and global.Natural_Evolution_Counter < 15 then
 				global.Natural_Evolution_Counter = global.Natural_Evolution_Counter + 1
 				end
 				
 			-- Evolution Factor = 20% - 29%:
 			elseif expansionChance >= 120 and expansionChance < 130 then
 				Natural_Evolution_SetExpansionLevel("Phase 3")
-				if game.evolution_factor >.3 and global.Natural_Evolution_Counter < 15 then
+				if game.evolution_factor >.3 and global.Natural_Evolution_Counter < 20 then
 				global.Natural_Evolution_Counter = global.Natural_Evolution_Counter + 1
 				end
 			
 			-- Evolution Factor = 30% - 39%:
 			elseif expansionChance >= 130 and expansionChance < 140 then
 				Natural_Evolution_SetExpansionLevel("Phase 4")
-				if game.evolution_factor >.4 and global.Natural_Evolution_Counter < 20 then
+				if game.evolution_factor >.4 and global.Natural_Evolution_Counter < 25 then
 				global.Natural_Evolution_Counter = global.Natural_Evolution_Counter + 1
 				end
 				
 			-- Evolution Factor = 40% - 49%:
 			elseif expansionChance >= 140 and expansionChance < 150 then
 				Natural_Evolution_SetExpansionLevel("Phase 5")
-				if game.evolution_factor >.5 and global.Natural_Evolution_Counter < 25 then
+				if game.evolution_factor >.5 and global.Natural_Evolution_Counter < 30 then
 				global.Natural_Evolution_Counter = global.Natural_Evolution_Counter + 1
 				end
 				
 			-- Evolution Factor = 50% - 59%:
 			elseif expansionChance >= 150 and expansionChance < 160 then
 				Natural_Evolution_SetExpansionLevel("Phase 6")
-				if game.evolution_factor >.6 and global.Natural_Evolution_Counter < 30 then
+				if game.evolution_factor >.6 and global.Natural_Evolution_Counter < 35 then
 				global.Natural_Evolution_Counter = global.Natural_Evolution_Counter + 1
 				end
 				
 			-- Evolution Factor = 60% - 69%:
 			elseif expansionChance >= 160 and expansionChance < 170 then
 				Natural_Evolution_SetExpansionLevel("Phase 7")
-				if game.evolution_factor >.7 and global.Natural_Evolution_Counter < 35 then
+				if game.evolution_factor >.7 and global.Natural_Evolution_Counter < 40 then
 				global.Natural_Evolution_Counter = global.Natural_Evolution_Counter + 1
 				end
 				
 			-- Evolution Factor = 70% - 79%:
 			elseif expansionChance >= 170 and expansionChance < 180 then
 				Natural_Evolution_SetExpansionLevel("Phase 8")
-				if game.evolution_factor >.7 and global.Natural_Evolution_Counter < 40 then
+				if game.evolution_factor >.7 and global.Natural_Evolution_Counter < 45 then
 				global.Natural_Evolution_Counter = global.Natural_Evolution_Counter + 1
 				end
 			
 			-- Evolution Factor = 80% - 89%:
 			elseif expansionChance >= 180 and expansionChance < 190 then
 				Natural_Evolution_SetExpansionLevel("Phase 9")
-				if game.evolution_factor >.8 and global.Natural_Evolution_Counter < 45 then
+				if game.evolution_factor >.8 and global.Natural_Evolution_Counter < 50 then
 				global.Natural_Evolution_Counter = global.Natural_Evolution_Counter + 1
 				end
 				

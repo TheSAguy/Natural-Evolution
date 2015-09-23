@@ -35,7 +35,7 @@ if NEConfig.Spawners then
 	-- Biter Spawner Adjustments
 		data.raw["unit-spawner"]["biter-spawner"].max_count_of_owned_units = 30
 		data.raw["unit-spawner"]["biter-spawner"].max_friends_around_to_spawn = 40
-		data.raw["unit-spawner"]["biter-spawner"].spawning_cooldown = {500, 150}
+		data.raw["unit-spawner"]["biter-spawner"].spawning_cooldown = {300, 150}
 		data.raw["unit-spawner"]["biter-spawner"].max_health = 2500
 		data.raw["unit-spawner"]["biter-spawner"].spawning_radius = 25
 		data.raw["unit-spawner"]["biter-spawner"].spawning_spacing = 2
@@ -45,7 +45,7 @@ if NEConfig.Spawners then
 		-- Spitter Spawner Adjustments
 		data.raw["unit-spawner"]["spitter-spawner"].max_count_of_owned_units = 20
 		data.raw["unit-spawner"]["spitter-spawner"].max_friends_around_to_spawn = 30
-		data.raw["unit-spawner"]["spitter-spawner"].spawning_cooldown = {600, 180}
+		data.raw["unit-spawner"]["spitter-spawner"].spawning_cooldown = {400, 180}
 		data.raw["unit-spawner"]["spitter-spawner"].max_health = 3500
 		data.raw["unit-spawner"]["spitter-spawner"].spawning_radius = 20
 		data.raw["unit-spawner"]["spitter-spawner"].spawning_spacing = 2
