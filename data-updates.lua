@@ -63,6 +63,9 @@ if NEConfig.ScienceCost then
 	ChangeRecipe("science-pack-2", "basic-inserter", "basic-inserter", 2)
 	ChangeRecipe("science-pack-3", "advanced-circuit", "advanced-circuit", 2)
 	ChangeRecipe("science-pack-3", "smart-inserter", "smart-inserter", 2)
+	ChangeRecipe("science-pack-3", "battery", "battery", 2)
+	ChangeRecipe("science-pack-3", "steel-plate", "steel-plate", 2)
+	ChangeRecipe("alien-science-pack", "alien-artifact", "alien-artifact", 2)
 
 
 end

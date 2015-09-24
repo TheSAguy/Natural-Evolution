@@ -1,7 +1,6 @@
 # Natural-Evolution
 Natural Evolution mod for Factorio
 
-Current released version 4.3.5 - Sep 20th
+Current released version 4.4.0 - Sep 20th
 
-Unreleased changes:
-Biological Bullet
+

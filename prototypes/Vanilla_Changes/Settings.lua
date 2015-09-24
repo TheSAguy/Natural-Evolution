@@ -186,6 +186,14 @@ Resistances = {
       {type = "acid", decrease = 15, percent = 15},
       {type = "poison", decrease = 0, percent = 15},
       {type = "laser", decrease = 15, percent = 15}},
+	Spawner = {
+	  {type = "fire", decrease = 0, percent = -25},
+      {type = "physical", decrease = 5, percent = 10},
+      {type = "impact", decrease = 15, percent = 15},
+      {type = "explosion", decrease = 15, percent = 30},
+      {type = "acid", decrease = 15, percent = 15},
+      {type = "poison", decrease = 0, percent = 15},
+      {type = "laser", decrease = 10, percent = 15}},
 	Fire = {
       {type = "fire", decrease = 0, percent = 75}},
 }

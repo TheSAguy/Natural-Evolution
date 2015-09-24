@@ -117,8 +117,8 @@ if data.raw.unit["behemoth-spitter"] then
 end
 
 
----- New Units (If no DyTech)
-if not NEConfig.mod.DyTechWar then
+---- New Units (If no DyTech and you're using the Spawner Adjustments)
+if not NEConfig.mod.DyTechWar and NEConfig.Spawners then
 	--- Biters
 		
 	if data.raw.unit["small-biter-Mk2"] then
