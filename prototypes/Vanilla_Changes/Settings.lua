@@ -1,4 +1,19 @@
 
+require "prototypes.Vanilla_Changes.Functions"
+
+Damage = {
+	Small_Biter = biter_melee_attack(6,3),
+	Small_Biter_Mk2 = biter_melee_attack(8,4),
+	Small_Biter_Mk3 = biter_melee_attack(10,5),
+	Medium_Biter = biter_melee_attack(15,8),
+	Medium_Biter_Mk2 = biter_melee_attack(20,10),
+	Medium_Biter_Mk3 = biter_melee_attack(25,13),
+	Big_Biter = biter_melee_attack(30,15),
+	Big_Biter_Mk2 = biter_melee_attack(35,18),
+	Big_Biter_Mk3 = biter_melee_attack(45,23),
+	Behemoth_Biter = biter_melee_attack(100,50)
+	}
+
 
 Health = {
 	Small_Biter = 15,

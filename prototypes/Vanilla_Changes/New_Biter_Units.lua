@@ -105,7 +105,7 @@ data:extend(
       range = 0.5,
       cooldown = 35,
       ammo_category = "melee",
-      ammo_type = make_unit_melee_ammo_type(8),
+      ammo_type = Damage.Small_Biter_Mk2,
       sound = make_biter_roars(0.5),
       animation = biterattackanimation(smallbiterMk2scale, small_biter_Mk2_tint1, small_biter_Mk2_tint2)
     },
@@ -140,7 +140,7 @@ data:extend(
       range = 0.5,
       cooldown = 35,
       ammo_category = "melee",
-      ammo_type = make_unit_melee_ammo_type(10),
+      ammo_type = Damage.Small_Biter_Mk3,
       sound = make_biter_roars(0.5),
       animation = biterattackanimation(smallbiterMk3scale, small_biter_Mk3_tint1, small_biter_Mk3_tint2)
     },
@@ -213,7 +213,7 @@ data:extend(
     {
       type = "projectile",
       ammo_category = "melee",
-      ammo_type = make_unit_melee_ammo_type(19),
+      ammo_type = Damage.Medium_Biter_Mk2,
       range = 1,
       cooldown = 35,
       sound = make_biter_roars(0.7),
@@ -250,7 +250,7 @@ data:extend(
     {
       type = "projectile",
       ammo_category = "melee",
-      ammo_type = make_unit_melee_ammo_type(23),
+      ammo_type = Damage.Medium_Biter_Mk3,
       range = 1,
       cooldown = 35,
       sound = make_biter_roars(0.7),
@@ -329,7 +329,7 @@ data:extend(
       range = 1.5,
       cooldown = 35,
       ammo_category = "melee",
-      ammo_type = make_unit_melee_ammo_type(38),
+      ammo_type = Damage.Big_Biter_Mk2,
       sound =  make_biter_roars(0.6),
       animation = biterattackanimation(bigbiterMk2scale, big_biter_Mk2_tint1, big_Mk2_biter_tint2)
     },
@@ -368,7 +368,7 @@ data:extend(
       range = 1.5,
       cooldown = 35,
       ammo_category = "melee",
-      ammo_type = make_unit_melee_ammo_type(46),
+      ammo_type = Damage.Big_Biter_Mk3,
       sound =  make_biter_roars(0.6),
       animation = biterattackanimation(bigbiterMk3scale, big_biter_Mk3_tint1, big_Mk3_biter_tint2)
     },

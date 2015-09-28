@@ -70,7 +70,7 @@ if NEConfig.ScienceCost then
 
 end
 
-local new_resist = {type = "Biological", decrease = 15, percent = 50}
+local new_resist = {type = "Venom", decrease = 50, percent = 100}
 local exclude = {["player"]=true, ["behemoth-biter"]=true, ["behemoth-spitter"]=true}--you got the idea of how this list should be filled
 
 for category_name, category in pairs(data.raw) do

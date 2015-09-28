@@ -64,9 +64,9 @@ function On_Load()
 
  -- Make sure all recipes and technologies are up to date.
 	for _,player in pairs(game.players) do
-	player.force.reset_recipes()
-	player.force.reset_technologies()
-end
+		player.force.reset_recipes()
+		player.force.reset_technologies()
+	end
  
  
 ---- Evolution_MOD
@@ -291,8 +291,10 @@ end
 
 
 
----- Each time a Terraforming Station scans a sector, reduce the evolution factor ----
+
 game.on_event(defines.events.on_sector_scanned, function(event)
+	
+	---- Each time a Terraforming Station scans a sector, reduce the evolution factor ----	
 	if event.radar.name == "TerraformingStation" then
    
    			if game.evolution_factor > 0.05 then
@@ -303,6 +305,14 @@ game.on_event(defines.events.on_sector_scanned, function(event)
    
 		writeDebug("The current Factor Multiplier is: " .. global.factormultiplier)   
 	end
+	
+	--- Each time a Thumper "Scans", it will attract biters in the area
+	if event.radar.name == "Thumper" then
+   		game.get_surface(1).set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},10)
+   		writeDebug("Thumper Scaned, units should attack")   
+	end
+	
+	
 end)
 --------------- END Terraforming Station ------------------------------
 
@@ -769,7 +779,7 @@ if NEConfig.Expansion then
 			game.map_settings.enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(4 * 3600, 6 * 3600)
 			game.map_settings.enemy_expansion.min_base_spacing = 4
-			game.map_settings.enemy_expansion.max_expansion_distance = 14
+			game.map_settings.enemy_expansion.max_expansion_distance = 13
 			game.map_settings.enemy_expansion.min_player_base_distance = 7
 			game.map_settings.enemy_expansion.settler_group_min_size = 10 + global.Natural_Evolution_Counter
 			game.map_settings.enemy_expansion.settler_group_max_size = 16 + global.Natural_Evolution_Counter
@@ -800,7 +810,7 @@ if NEConfig.Expansion then
 			game.map_settings.enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(4 * 3600, 7 * 3600)
 			game.map_settings.enemy_expansion.min_base_spacing = 4
-			game.map_settings.enemy_expansion.max_expansion_distance = 16
+			game.map_settings.enemy_expansion.max_expansion_distance = 14
 			game.map_settings.enemy_expansion.min_player_base_distance = 6
 			game.map_settings.enemy_expansion.settler_group_min_size = 12 + global.Natural_Evolution_Counter
 			game.map_settings.enemy_expansion.settler_group_max_size = 19 + global.Natural_Evolution_Counter
@@ -831,7 +841,7 @@ if NEConfig.Expansion then
 			game.map_settings.enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(5 * 3600, 7 * 3600)
 			game.map_settings.enemy_expansion.min_base_spacing = 4
-			game.map_settings.enemy_expansion.max_expansion_distance = 18
+			game.map_settings.enemy_expansion.max_expansion_distance = 15
 			game.map_settings.enemy_expansion.min_player_base_distance = 5
 			game.map_settings.enemy_expansion.settler_group_min_size = 14 + global.Natural_Evolution_Counter
 			game.map_settings.enemy_expansion.settler_group_max_size = 22 + global.Natural_Evolution_Counter
@@ -862,7 +872,7 @@ if NEConfig.Expansion then
 			game.map_settings.enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(5 * 3600, 7 * 3600)
 			game.map_settings.enemy_expansion.min_base_spacing = 4
-			game.map_settings.enemy_expansion.max_expansion_distance = 20
+			game.map_settings.enemy_expansion.max_expansion_distance = 16
 			game.map_settings.enemy_expansion.min_player_base_distance = 4
 			game.map_settings.enemy_expansion.settler_group_min_size = 16 + global.Natural_Evolution_Counter
 			game.map_settings.enemy_expansion.settler_group_max_size = 25 + global.Natural_Evolution_Counter
@@ -893,7 +903,7 @@ if NEConfig.Expansion then
 			game.map_settings.enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(5 * 3600, 8 * 3600)
 			game.map_settings.enemy_expansion.min_base_spacing = 3
-			game.map_settings.enemy_expansion.max_expansion_distance = 22
+			game.map_settings.enemy_expansion.max_expansion_distance = 18
 			game.map_settings.enemy_expansion.min_player_base_distance = 3
 			game.map_settings.enemy_expansion.settler_group_min_size = 18 + global.Natural_Evolution_Counter
 			game.map_settings.enemy_expansion.settler_group_max_size = 28 + global.Natural_Evolution_Counter
@@ -924,7 +934,7 @@ if NEConfig.Expansion then
 			game.map_settings.enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(6 * 3600, 8 * 3600)
 			game.map_settings.enemy_expansion.min_base_spacing = 3
-			game.map_settings.enemy_expansion.max_expansion_distance = 30
+			game.map_settings.enemy_expansion.max_expansion_distance = 20
 			game.map_settings.enemy_expansion.min_player_base_distance = 0
 			game.map_settings.enemy_expansion.settler_group_min_size = 30 + global.Natural_Evolution_Counter
 			game.map_settings.enemy_expansion.settler_group_max_size = 75 + global.Natural_Evolution_Counter
@@ -946,7 +956,7 @@ if NEConfig.Expansion then
 			game.map_settings.enemy_expansion.enabled = true					 
 			global.Natural_Evolution_Timer = math.random(6 * 3600, 8 * 3600)
 			game.map_settings.enemy_expansion.min_base_spacing = 2
-			game.map_settings.enemy_expansion.max_expansion_distance = 50
+			game.map_settings.enemy_expansion.max_expansion_distance = 20
 			game.map_settings.enemy_expansion.min_player_base_distance = 0
 			game.map_settings.enemy_expansion.settler_group_min_size = 100 + global.Natural_Evolution_Counter
 			game.map_settings.enemy_expansion.settler_group_max_size = 200 + global.Natural_Evolution_Counter

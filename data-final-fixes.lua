@@ -149,17 +149,21 @@ if NEConfig.Spawners then
 	-- Vanilla Unit Adjustments
 	data.raw["unit"]["small-biter"].resistances = Resistances.Small_Biter
 	data.raw["unit"]["small-biter"].max_health = Health.Small_Biter
+	data.raw["unit"]["small-biter"].ammo_type = Damage.Small_Biter
 
 	data.raw["unit"]["medium-biter"].resistances = Resistances.Medium_Biter
 	data.raw["unit"]["medium-biter"].max_health = Health.Medium_Biter
+	data.raw["unit"]["medium-biter"].ammo_type = Damage.Medium_Biter
 	data.raw["unit"]["medium-biter"].pollution_to_join_attack = 800
 
 	data.raw["unit"]["big-biter"].resistances = Resistances.Big_Biter
 	data.raw["unit"]["big-biter"].max_health = Health.Big_Biter
+	data.raw["unit"]["big-biter"].ammo_type = Damage.Big_Biter
 	data.raw["unit"]["big-biter"].pollution_to_join_attack = 1000
 
 	data.raw["unit"]["behemoth-biter"].resistances = Resistances.Behemoth_Biter
 	data.raw["unit"]["behemoth-biter"].max_health = Health.Behemoth_Biter
+	data.raw["unit"]["behemoth-biter"].ammo_type = Damage.Behemoth_Biter
 	data.raw["unit"]["behemoth-biter"].pollution_to_join_attack = 2500
 
 
