@@ -28,7 +28,7 @@ require("prototypes.Artifact_Collector.item")
 require("prototypes.Artifact_Collector.recipe")
 ---------------------------------------------------------------
 
-	--- Alein Control Station
+	--- Alien Control Station
 
 require("prototypes.Alien_Control_Station.entity")
 require("prototypes.Alien_Control_Station.item")
@@ -41,6 +41,14 @@ require("prototypes.Terraforming_Station.entity")
 require("prototypes.Terraforming_Station.item")
 require("prototypes.Terraforming_Station.recipe")
 ---------------------------------------------------------------
+
+	--- Thumper
+
+--require("prototypes.Thumper.entity")
+--require("prototypes.Thumper.item")
+--require("prototypes.Thumper.recipe")
+---------------------------------------------------------------
+
 
     --- Other - Building Materials, Attractors,  Biological Damage & Ammo
 

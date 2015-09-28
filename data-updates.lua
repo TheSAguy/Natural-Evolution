@@ -69,3 +69,19 @@ if NEConfig.ScienceCost then
 
 
 end
+
+local new_resist = {type = "Biological", decrease = 15, percent = 50}
+local exclude = {["player"]=true, ["behemoth-biter"]=true, ["behemoth-spitter"]=true}--you got the idea of how this list should be filled
+
+for category_name, category in pairs(data.raw) do
+    if category_name~='projectile' then --first filter, purely demonstrational
+        for prot_name, prot in pairs(category) do
+            if prot.resistances and not exclude[prot_name] then --second filter
+                 table.insert(prot.resistances,new_resist)
+            end
+        end
+    end
+end
+
+
+
