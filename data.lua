@@ -44,9 +44,9 @@ require("prototypes.Terraforming_Station.recipe")
 
 	--- Thumper
 
---require("prototypes.Thumper.entity")
---require("prototypes.Thumper.item")
---require("prototypes.Thumper.recipe")
+require("prototypes.Thumper.entity")
+require("prototypes.Thumper.item")
+require("prototypes.Thumper.recipe")
 ---------------------------------------------------------------
 
 

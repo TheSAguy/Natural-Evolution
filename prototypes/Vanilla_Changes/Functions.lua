@@ -1,6 +1,6 @@
 
 ---- Biter Attack Function
-function biter_melee_attack(damagevalue, damagevalue2)
+function Biter_Melee_Attack(damagevalue, damagevalue2)
   return
   {
     category = "melee",
@@ -26,7 +26,7 @@ function biter_melee_attack(damagevalue, damagevalue2)
 end
 
 ---- Biter Attack Function - Normal Biter
-function biter_melee_attack_Healthy(damagevalue, damagevalue2)
+function Biter_Melee_Attack_Healthy(damagevalue, damagevalue2)
   return
   {
     category = "melee",
@@ -53,7 +53,7 @@ end
 
 
 ---- Biter Attack Function - Infected Biter
-function biter_melee_attack_Infected(damagevalue, damagevalue2)
+function Biter_Melee_Attack_Infected(damagevalue, damagevalue2)
   return
   {
     category = "melee",
@@ -84,7 +84,7 @@ end
 
 
 ---- Biter Attack Function - Mutated Biter
-function biter_melee_attack_Mutated(damagevalue, damagevalue2)
+function Biter_Melee_Attack_Mutated(damagevalue, damagevalue2)
   return
   {
     category = "melee",
