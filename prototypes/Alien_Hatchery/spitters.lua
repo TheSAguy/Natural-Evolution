@@ -7,7 +7,6 @@ data:extend(
     icon = "__base__/graphics/icons/creeper.png",
     flags = {"placeable-player", "placeable-enemy", "placeable-off-grid", "breaths-air", "not-repairable"},
     max_health = 10,
-    --order="b-b-e",
 	order = "001",
     subgroup="enemies",
     resistances = 
@@ -17,7 +16,7 @@ data:extend(
         percent = 15,
       },
     },
-    healing_per_tick = 0.001,
+    healing_per_tick = 0.0001,
     collision_box = {{-0.3, -0.3}, {0.3, 0.3}},
     selection_box = {{-0.4, -0.4}, {0.4, 0.4}},
     sticker_box = {{-0.3, -0.5}, {0.3, 0.1}},
@@ -44,7 +43,6 @@ data:extend(
     icon = "__base__/graphics/icons/creeper.png",
     flags = {"placeable-player", "placeable-enemy", "placeable-off-grid", "breaths-air", "not-repairable"},
     max_health = 50,
-    --order="b-b-f",
 	order = "002",
     subgroup="enemies",
     resistances = 
@@ -62,7 +60,7 @@ data:extend(
         percent = 15
       }
     },
-    healing_per_tick = 0.001,
+    healing_per_tick = 0.0001,
     collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
     selection_box = {{-0.5, -0.7}, {0.5, 0.7}},
     sticker_box = {{-0.3, -0.5}, {0.3, 0.1}},
@@ -89,7 +87,6 @@ data:extend(
     icon = "__base__/graphics/icons/creeper.png",
     flags = {"placeable-player", "placeable-enemy", "placeable-off-grid", "breaths-air", "not-repairable"},
     max_health = 200,
-    --order="b-b-g",
 	order = "003",
     subgroup="enemies",
     resistances = 
@@ -112,7 +109,7 @@ data:extend(
       }
     },
 	spawning_time_modifier = 2,
-    healing_per_tick = 0.001,
+    healing_per_tick = 0.0001,
     collision_box = {{0, -0.01}, {0, 0.01}},
     selection_box = {{-0.7, -1.0}, {0.7, 1.0}},
     sticker_box = {{-0.3, -0.5}, {0.3, 0.1}},
@@ -139,7 +136,6 @@ data:extend(
     icon = "__base__/graphics/icons/creeper.png",
     flags = {"placeable-player", "placeable-enemy", "placeable-off-grid", "breaths-air", "not-repairable"},
     max_health = 2000,
-    --order="b-h-h",
 	order = "204",
     subgroup="enemies",
     resistances =
@@ -150,7 +146,7 @@ data:extend(
       }
     },
     spawning_time_modifier = 8,
-    healing_per_tick = 0.01,
+    healing_per_tick = 0.0001,
     collision_box = {{-0.5, -0.5}, {0.5, 0.5}},
     selection_box = {{-0.7, -1.0}, {0.7, 1.0}},
     sticker_box = {{-0.3, -0.5}, {0.3, 0.1}},

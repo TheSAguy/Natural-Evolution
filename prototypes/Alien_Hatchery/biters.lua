@@ -7,7 +7,6 @@ data:extend(
     icon = "__base__/graphics/icons/creeper.png",
     flags = {"placeable-player", "placeable-enemy", "placeable-off-grid", "breaths-air"},
     max_health = 15,
---    order = "b-b-a",
 	order = "001",
     subgroup="enemies",
     resistances = 
@@ -17,7 +16,7 @@ data:extend(
         percent = 10,
       },
     },
-    healing_per_tick = 0.001,
+    healing_per_tick = 0.0001,
     collision_box = {{-0.2, -0.2}, {0.2, 0.2}},
     selection_box = {{-0.4, -0.7}, {0.7, 0.4}},
     attack_parameters =
@@ -47,7 +46,6 @@ data:extend(
     icon = "__base__/graphics/icons/creeper.png",
     flags = {"placeable-player", "placeable-enemy", "placeable-off-grid", "breaths-air", "not-repairable"},
     max_health = 75,
-    --order="b-b-b",
 	order = "002",
     subgroup="enemies",
     resistances = 
@@ -65,7 +63,7 @@ data:extend(
         percent = 10
       },
     },
-    healing_per_tick = 0.001,
+    healing_per_tick = 0.0001,
     collision_box = {{-0.3, -0.3}, {0.3, 0.3}},
     selection_box = {{-0.7, -1.5}, {0.7, 0.3}},
     sticker_box = {{-0.3, -0.5}, {0.3, 0.1}},
@@ -94,7 +92,6 @@ data:extend(
   {
     type = "unit",
     name = "tame-big-biter",
-    --order="b-b-c",
 	order = "003",
     icon = "__base__/graphics/icons/creeper.png",
     flags = {"placeable-player", "placeable-enemy", "placeable-off-grid", "breaths-air", "not-repairable"},
@@ -120,7 +117,7 @@ data:extend(
       }
     },
 	spawning_time_modifier = 2,
-    healing_per_tick = 0.002,
+    healing_per_tick = 0.0002,
     collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
     selection_box = {{-0.7, -1.5}, {0.7, 0.3}},
     sticker_box = {{-0.6, -0.8}, {0.6, 0}},
@@ -149,7 +146,6 @@ data:extend(
   {
     type = "unit",
     name = "tame-behemoth-biter",
-    --order="b-d-d",
 	order = "204",
     icon = "__base__/graphics/icons/creeper.png",
     flags = {"placeable-player", "placeable-enemy", "placeable-off-grid", "breaths-air", "not-repairable"},
@@ -169,7 +165,7 @@ data:extend(
       }
     },
     spawning_time_modifier = 8,
-    healing_per_tick = 0.01,
+    healing_per_tick = 0.0001,
     collision_box = {{-0.4, -0.4}, {0.4, 0.4}},
     selection_box = {{-0.7, -1.5}, {0.7, 0.3}},
     sticker_box = {{-0.6, -0.8}, {0.6, 0}},

@@ -60,12 +60,10 @@ end)
 				 
 function On_Load()
 
- local surface = game.surfaces['nauvis'] 
-
  -- Make sure all recipes and technologies are up to date.
-	for _,player in pairs(game.players) do
-		player.force.reset_recipes()
-		player.force.reset_technologies()
+	for k,v in pairs(game.forces) do 
+		force.reset_recipes() 
+		force.reset_technologies() 
 	end
  
  
@@ -129,7 +127,8 @@ end
 
 ---------------------------------------------
 function On_Built(event)
-   
+
+   local surface = event.created_entity.surface   
    --- Harder Ending Some action if you built the Rocket-silo!
   if NEConfig.HarderEndGame then
    if event.created_entity.name == "rocket-silo" then
@@ -143,7 +142,7 @@ function On_Built(event)
 			end  
 
 		 -- Biters will attack the newly built Rocket Silo
-		game.get_surface(1).set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
+		game.surface.set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
 		
 		game.player.print("WARNING!")
 		game.player.print("Building a Rocket Silo caused a lot of noise and biter will Attack!!!")
@@ -170,7 +169,7 @@ function On_Built(event)
 	local newCollector
 	
 	if event.created_entity.name == "Artifact-collector-area" then
-    local surface = event.created_entity.surface
+
     local force = event.created_entity.force
 		newCollector = surface.create_entity({name = "Artifact-collector", position = event.created_entity.position, force = force})
 		event.created_entity.destroy()
@@ -295,7 +294,7 @@ end
 game.on_event(defines.events.on_sector_scanned, function(event)
 	
 	---- Each time a Terraforming Station scans a sector, reduce the evolution factor ----	
-	if event.radar.name == "TerraformingStation" then
+	if event.radar.surface.name == "TerraformingStation" then
    
    			if game.evolution_factor > 0.05 then
 				game.evolution_factor = game.evolution_factor - ((0.000125 * global.factormultiplier) * (1 - game.evolution_factor))
@@ -307,8 +306,9 @@ game.on_event(defines.events.on_sector_scanned, function(event)
 	end
 	
 	--- Each time a Thumper "Scans", it will attract biters in the area
-	if event.radar.name == "Thumper" then
-   		game.get_surface(1).set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},10)
+	local surface = event.created_entity.surface   
+	if event.radar.surface.name == "Thumper" then
+   		game.surface.set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},10)
    		writeDebug("Thumper Scaned, units should attack")   
 	end
 	
@@ -321,7 +321,9 @@ end)
 
 function Control_Enemies()
 
-  local surface = game.surfaces['nauvis'] 
+  --local surface = game.surfaces['nauvis'] 
+  local surface = beacon.surface 
+  local enemyForce = game.forces.enemy 
   
   for k,beacon in ipairs(global.beacons) do
     if beacon.valid then
@@ -332,7 +334,7 @@ function Control_Enemies()
 		
         if #bases > 0 then
           for i, base in ipairs(bases) do
-            if base.force == (game.forces.enemy) and math.random(global.minds.difficulty*2)==1 then --easy = 16.5% chance, normal = 10%, hard = 5%
+            if base.force == (enemyForce) and math.random(global.minds.difficulty*2)==1 then --easy = 16.5% chance, normal = 10%, hard = 5%
              --Convert_Base(base, false)
 			 Convert_Base(base, false, beacon.force)
             end
@@ -341,7 +343,7 @@ function Control_Enemies()
        
 		  for i, enemy in ipairs(surface.find_enemy_units(beacon.position, NEConfig.Unit_Search_Distance)) do --search area of ten around each ACS
 		  
-            if enemy.force == (game.forces.enemy) then --do only if not already controlled
+            if enemy.force == (enemyForce) then --do only if not already controlled
               if math.random(global.minds.difficulty*2)==1 then --easy = 16.5% chance, normal = 10%, hard = 5%
                 --enemy.force=game.player.force
                 enemy.force=beacon.force
@@ -363,8 +365,9 @@ end
 
 function Remove_Mind_Control()
 
-   local surface = game.surfaces['nauvis'] 
-  
+   local surface = beacon.surface
+   local enemyForce = game.forces.enemy 
+	
   if global.beacons[1] then -- if there are valid beacons
     for k,mind in ipairs (global.minds) do --remove mind control from biters not in area of influence
       if not mind.valid then --first make sure the enemy is still valid, if not remove them
@@ -375,7 +378,7 @@ function Remove_Mind_Control()
           controlled = true
           break
         end
-        if not controlled then mind.force=game.forces.enemy end
+        if not controlled then mind.force=enemyForce end
       end
     end
   end
@@ -383,7 +386,8 @@ end
 
 function Convert_Base(base, died, newforce)
   
-  local surface = game.surfaces['nauvis'] 
+
+  local surface = base.surface
   local enemies=Get_Bounding_Box(base.position, NEConfig.Unit_Search_Distance)
   local units={}
   local hives={}
@@ -394,7 +398,7 @@ function Convert_Base(base, died, newforce)
   local count_units=0
   enemies = surface.find_entities(enemies)
   for i, enemy in ipairs(enemies) do
-    if enemy.type=="turret" and enemy.force == (game.forces.enemy) then
+    if enemy.type=="turret" and enemy.force == (enemyForce) then
       table.insert(worms, enemy)
     elseif enemy.type=="unit-spawner" then
       table.insert(hives, enemy)
@@ -417,7 +421,7 @@ function Convert_Base(base, died, newforce)
   if count~=0 and math.random(1+math.sqrt(count))==1 then
 
     if died then 
-	  table.insert(global.hiveminds, game.create_entity{name=base.name, position=base.position, force=game.newforce}) 
+	  table.insert(global.hiveminds, game.create_entity{name=base.name, position=base.position, force=game.newforce}) --- game.create_entity issue??
 	end
 	for _, worm in pairs(worms) do 
 
@@ -581,11 +585,14 @@ end)
 
 if NEConfig.Expansion then
 	
+	local surface = event.created_entity.surface   
+	local enemy_expansion = game.map_settings.enemy_expansion
+	
 	function Natural_Evolution_SetExpansionLevel(Expansion_State)
 		Expansion_State = Expansion_State or "Peaceful"
 		
 		if Expansion_State == "Peaceful" then
-			game.map_settings.enemy_expansion.enabled = false
+			enemy_expansion.enabled = false
 			global.Natural_Evolution_Timer = 0
 			
 			-- Each time a Phase is triggered, the Evolution Factor is decreased slightly, just during the Phase.
@@ -621,15 +628,15 @@ if NEConfig.Expansion then
 		
 		-- Defines the values for the different Evolution States.
 		elseif Expansion_State == "Awakening" then
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(2 * 3600, 4 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 3
-			game.map_settings.enemy_expansion.max_expansion_distance = 5
-			game.map_settings.enemy_expansion.min_player_base_distance = 15
-			game.map_settings.enemy_expansion.settler_group_min_size = 2 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 4 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 60 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 120 * 60
+			enemy_expansion.min_base_spacing = 3
+			enemy_expansion.max_expansion_distance = 5
+			enemy_expansion.min_player_base_distance = 15
+			enemy_expansion.settler_group_min_size = 2 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 4 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 60 * 60
+			enemy_expansion.max_expansion_cooldown = 120 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -648,19 +655,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},100)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},100)
 				
 			end  
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(2 * 3600, 4 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 5
-			game.map_settings.enemy_expansion.max_expansion_distance = 6
-			game.map_settings.enemy_expansion.min_player_base_distance = 10
-			game.map_settings.enemy_expansion.settler_group_min_size = 2 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 4 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 40 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 60 * 60
+			enemy_expansion.min_base_spacing = 5
+			enemy_expansion.max_expansion_distance = 6
+			enemy_expansion.min_player_base_distance = 10
+			enemy_expansion.settler_group_min_size = 2 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 4 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 40 * 60
+			enemy_expansion.max_expansion_cooldown = 60 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -679,19 +686,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},200)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},200)
 				
 			end  
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(2 * 3600, 4 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 5
-			game.map_settings.enemy_expansion.max_expansion_distance = 8
-			game.map_settings.enemy_expansion.min_player_base_distance = 9
-			game.map_settings.enemy_expansion.settler_group_min_size = 4 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 7 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 24 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 30 * 60
+			enemy_expansion.min_base_spacing = 5
+			enemy_expansion.max_expansion_distance = 8
+			enemy_expansion.min_player_base_distance = 9
+			enemy_expansion.settler_group_min_size = 4 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 7 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 24 * 60
+			enemy_expansion.max_expansion_cooldown = 30 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -710,19 +717,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},400)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},400)
 				
 			end   
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(3 * 3600, 5 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 5
-			game.map_settings.enemy_expansion.max_expansion_distance = 10
-			game.map_settings.enemy_expansion.min_player_base_distance = 8
-			game.map_settings.enemy_expansion.settler_group_min_size = 6 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 10 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 20 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 30 * 60
+			enemy_expansion.min_base_spacing = 5
+			enemy_expansion.max_expansion_distance = 10
+			enemy_expansion.min_player_base_distance = 8
+			enemy_expansion.settler_group_min_size = 6 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 10 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 20 * 60
+			enemy_expansion.max_expansion_cooldown = 30 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -741,19 +748,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},500)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},500)
 				
 			end   
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(4 * 3600, 6 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 5
-			game.map_settings.enemy_expansion.max_expansion_distance = 12
-			game.map_settings.enemy_expansion.min_player_base_distance = 8
-			game.map_settings.enemy_expansion.settler_group_min_size = 8 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 13 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 20 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 24 * 60
+			enemy_expansion.min_base_spacing = 5
+			enemy_expansion.max_expansion_distance = 12
+			enemy_expansion.min_player_base_distance = 8
+			enemy_expansion.settler_group_min_size = 8 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 13 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 20 * 60
+			enemy_expansion.max_expansion_cooldown = 24 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -772,19 +779,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},600)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},600)
 				
 			end  
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(4 * 3600, 6 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 4
-			game.map_settings.enemy_expansion.max_expansion_distance = 13
-			game.map_settings.enemy_expansion.min_player_base_distance = 7
-			game.map_settings.enemy_expansion.settler_group_min_size = 10 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 16 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 20 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 20 * 60
+			enemy_expansion.min_base_spacing = 4
+			enemy_expansion.max_expansion_distance = 13
+			enemy_expansion.min_player_base_distance = 7
+			enemy_expansion.settler_group_min_size = 10 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 16 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 20 * 60
+			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -803,19 +810,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},700)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},700)
 				
 			end  
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(4 * 3600, 7 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 4
-			game.map_settings.enemy_expansion.max_expansion_distance = 14
-			game.map_settings.enemy_expansion.min_player_base_distance = 6
-			game.map_settings.enemy_expansion.settler_group_min_size = 12 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 19 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 15 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 20 * 60
+			enemy_expansion.min_base_spacing = 4
+			enemy_expansion.max_expansion_distance = 14
+			enemy_expansion.min_player_base_distance = 6
+			enemy_expansion.settler_group_min_size = 12 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 19 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 15 * 60
+			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -834,19 +841,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},800)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},800)
 				
 			end  
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(5 * 3600, 7 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 4
-			game.map_settings.enemy_expansion.max_expansion_distance = 15
-			game.map_settings.enemy_expansion.min_player_base_distance = 5
-			game.map_settings.enemy_expansion.settler_group_min_size = 14 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 22 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 15 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 20 * 60
+			enemy_expansion.min_base_spacing = 4
+			enemy_expansion.max_expansion_distance = 15
+			enemy_expansion.min_player_base_distance = 5
+			enemy_expansion.settler_group_min_size = 14 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 22 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 15 * 60
+			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -865,19 +872,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},900)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},900)
 				
 			end  
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(5 * 3600, 7 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 4
-			game.map_settings.enemy_expansion.max_expansion_distance = 16
-			game.map_settings.enemy_expansion.min_player_base_distance = 4
-			game.map_settings.enemy_expansion.settler_group_min_size = 16 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 25 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 15 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 20 * 60
+			enemy_expansion.min_base_spacing = 4
+			enemy_expansion.max_expansion_distance = 16
+			enemy_expansion.min_player_base_distance = 4
+			enemy_expansion.settler_group_min_size = 16 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 25 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 15 * 60
+			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -896,19 +903,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},1000)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},1000)
 				
 			end  
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(5 * 3600, 8 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 3
-			game.map_settings.enemy_expansion.max_expansion_distance = 18
-			game.map_settings.enemy_expansion.min_player_base_distance = 3
-			game.map_settings.enemy_expansion.settler_group_min_size = 18 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 28 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 15 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 20 * 60
+			enemy_expansion.min_base_spacing = 3
+			enemy_expansion.max_expansion_distance = 18
+			enemy_expansion.min_player_base_distance = 3
+			enemy_expansion.settler_group_min_size = 18 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 28 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 15 * 60
+			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -927,19 +934,19 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
 				
 			end  
 			-----
-			game.map_settings.enemy_expansion.enabled = true
+			enemy_expansion.enabled = true
 			global.Natural_Evolution_Timer = math.random(6 * 3600, 8 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 3
-			game.map_settings.enemy_expansion.max_expansion_distance = 20
-			game.map_settings.enemy_expansion.min_player_base_distance = 0
-			game.map_settings.enemy_expansion.settler_group_min_size = 30 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 75 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 15 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 20 * 60
+			enemy_expansion.min_base_spacing = 3
+			enemy_expansion.max_expansion_distance = 20
+			enemy_expansion.min_player_base_distance = 0
+			enemy_expansion.settler_group_min_size = 30 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 75 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 15 * 60
+			enemy_expansion.max_expansion_cooldown = 20 * 60
 					---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -952,16 +959,16 @@ if NEConfig.Expansion then
 		
 		elseif Expansion_State == "Armageddon" then
 			--- During Armageddon state the player will be attached regardless of Silo built or not.
-			game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-			game.map_settings.enemy_expansion.enabled = true					 
+			game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+			enemy_expansion.enabled = true					 
 			global.Natural_Evolution_Timer = math.random(6 * 3600, 8 * 3600)
-			game.map_settings.enemy_expansion.min_base_spacing = 2
-			game.map_settings.enemy_expansion.max_expansion_distance = 20
-			game.map_settings.enemy_expansion.min_player_base_distance = 0
-			game.map_settings.enemy_expansion.settler_group_min_size = 100 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.settler_group_max_size = 200 + global.Natural_Evolution_Counter
-			game.map_settings.enemy_expansion.min_expansion_cooldown = 8 * 60
-			game.map_settings.enemy_expansion.max_expansion_cooldown = 15 * 60
+			enemy_expansion.min_base_spacing = 2
+			enemy_expansion.max_expansion_distance = 20
+			enemy_expansion.min_player_base_distance = 0
+			enemy_expansion.settler_group_min_size = 100 + global.Natural_Evolution_Counter
+			enemy_expansion.settler_group_max_size = 200 + global.Natural_Evolution_Counter
+			enemy_expansion.min_expansion_cooldown = 8 * 60
+			enemy_expansion.max_expansion_cooldown = 15 * 60
 				---
 			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
@@ -988,7 +995,8 @@ end
 
 ---- Evolution_MOD
 function UpdateUnitsCommands(player_index)
-	local player = game.players[player_index].character
+	--local player = game.players[player_index].character
+	local player = game.get_player(player_index)
 	local pos = player.position
     local aggression_area = {{pos.x - agro_area_rad, pos.y - agro_area_rad}, {pos.x + agro_area_rad, pos.y + agro_area_rad}}
 	if not player.surface.valid then return end
@@ -1012,46 +1020,48 @@ function UpdateUnitsCommands(player_index)
 	local unit_count = 0
 	if closest_index == -1 then
 		
-		local attOn = game.players[player_index].get_item_count("attractor-on") 
-		local attOff = game.players[player_index].get_item_count("attractor-off") 
+		--local attOn = game.players[player_index].get_item_count("attractor-on") 
+		--local attOff = game.players[player_index].get_item_count("attractor-off") 
+		local attOn = player.get_item_count("attractor-on")
+		local attOff = player.get_item_count("attractor-off")
 		local lastState = nil
-		if global.Evolution_MOD[game.players[player_index].name] and global.Evolution_MOD[game.players[player_index].name].lastState then
-			lastState = global.Evolution_MOD[game.players[player_index].name].lastState
+		if global.Evolution_MOD[player.name] and global.Evolution_MOD[player.name].lastState then
+			lastState = global.Evolution_MOD[player.name].lastState
 		else
-			if global.Evolution_MOD[game.players[player_index].name] == nil then
-				global.Evolution_MOD[game.players[player_index].name] = {}
+			if global.Evolution_MOD[player.name] == nil then
+				global.Evolution_MOD[player.name] = {}
 			end
-			global.Evolution_MOD[game.players[player_index].name].lastState = nil
+			global.Evolution_MOD[player.name].lastState = nil
 		end
 		
 		if attOn > 0 and attOff == 0 then
 			if attOn > 1 then
-				game.players[player_index].remove_item({name="attractor-on", count=(attOn - 1)})
+				player.remove_item({name="attractor-on", count=(attOn - 1)})
 			end
 			lastState = "on"
 		elseif attOn == 0 and attOff > 0 then
 			if attOff > 1 then
-				game.players[player_index].remove_item({name="attractor-off", count=(attOff - 1)})
+				player.remove_item({name="attractor-off", count=(attOff - 1)})
 			end
 			lastState = "off"
 		elseif attOn > 0 and attOff > 0 then
 			if lastState ~= nil and lastState == "off" then
-				game.players[player_index].remove_item({name="attractor-off", count=attOff})
+				player.remove_item({name="attractor-off", count=attOff})
 				if attOn > 1 then
-					game.players[player_index].remove_item({name="attractor-on", count=(attOn - 1)})
+					player.remove_item({name="attractor-on", count=(attOn - 1)})
 				end
 				lastState = "on"
 			else
-				game.players[player_index].remove_item({name="attractor-on", count=attOn})
+				player.remove_item({name="attractor-on", count=attOn})
 				if attOn > 1 then
-					game.players[player_index].remove_item({name="attractor-on", count=(attOn - 1)})
+					player.remove_item({name="attractor-on", count=(attOn - 1)})
 				end
 				lastState = "off"
 			end
 		else
 			lastState = "off"
 		end
-		global.Evolution_MOD[game.players[player_index].name].lastState = lastState
+		global.Evolution_MOD[player.name].lastState = lastState
 		
 		if lastState == "off" then return end
 		local call_back_area = {{pos.x -  call_back_area_rad, pos.y -  call_back_area_rad}, {pos.x +  call_back_area_rad, pos.y +  call_back_area_rad}}
