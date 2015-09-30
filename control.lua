@@ -665,8 +665,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},100)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},100)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},100)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},100)
 				
 			end  
 			-----
@@ -697,8 +697,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},200)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},200)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},200)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},200)
 				
 			end  
 			-----
@@ -729,8 +729,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},400)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},400)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},400)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},400)
 				
 			end   
 			-----
@@ -761,8 +761,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},500)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},500)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},500)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},500)
 				
 			end   
 			-----
@@ -793,8 +793,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},600)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},600)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},600)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},600)
 				
 			end  
 			-----
@@ -825,8 +825,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},700)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},700)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},700)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},700)
 				
 			end  
 			-----
@@ -857,8 +857,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},800)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},800)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},800)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},800)
 				
 			end  
 			-----
@@ -889,8 +889,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},900)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},900)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},900)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},900)
 				
 			end  
 			-----
@@ -921,8 +921,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},1000)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},1000)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},1000)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},1000)
 				
 			end  
 			-----
@@ -953,8 +953,8 @@ if NEConfig.Expansion then
 				game.evolution_factor = 0.99999
 				end  	
 				---- Attack the player, since you have a silo built
-				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},2000)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},2000)
 				
 			end  
 			-----
@@ -979,8 +979,8 @@ if NEConfig.Expansion then
 		
 		elseif Expansion_State == "Armageddon" then
 			--- During Armageddon state the player will be attached regardless of Silo built or not.
-			game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
-			--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+			game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},2000)
+			--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},2000)
 			enemy_expansion.enabled = true					 
 			global.Natural_Evolution_Timer = math.random(6 * 3600, 8 * 3600)
 			enemy_expansion.min_base_spacing = 2
