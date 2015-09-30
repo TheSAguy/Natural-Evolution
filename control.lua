@@ -61,18 +61,10 @@ end)
 function On_Load()
 
  -- Make sure all recipes and technologies are up to date.
-	--[[ New Code
-	for k,v in pairs(game.forces) do 
+	for k,force in pairs(game.forces) do 
 		force.reset_recipes()
 		force.reset_technologies() 
 	end
-	]]
-	--- Old Code
-	for _,player in pairs(game.players) do
-		player.force.reset_recipes()
-		player.force.reset_technologies()
-	end
-
  
 ---- Evolution_MOD
 	if global.Evolution_MOD == nil then
@@ -90,6 +82,7 @@ function On_Load()
       global.hiveminds = {} -- Bases / Spawners
 	end
 
+--- Alien_Control_Station Difficulty settings	
 	if NEConfig.Conversion_Difficulty == Easy then
       global.minds.difficulty = 3 -- Easy difficulty
 	elseif NEConfig.Conversion_Difficulty == Normal then
@@ -123,61 +116,64 @@ function On_Load()
 		end
 	end
 
-		--- Harder End Game
+	
+	--- Harder End Game
 	---- Rocket Silo Initialization ----	
 	if not global.RocketSiloBuilt then
       global.RocketSiloBuilt = 0
 	end
- 	
-	
+ 		
 end
 
 ---------------------------------------------
+
 function On_Built(event)
 
      
    --- Harder Ending Some action if you built the Rocket-silo!
-  if NEConfig.HarderEndGame then
-   if event.created_entity.name == "rocket-silo" then
-		local surface = event.created_entity.surface 
-	  	global.RocketSiloBuilt = global.RocketSiloBuilt + 1
-		writeDebug("The number of Rocket Silos is: " .. global.RocketSiloBuilt)	
-		-- Increase Evolution factor by 10% once a Rocket Silo is built	
-			if game.evolution_factor < 0.89999 then
-				game.evolution_factor = game.evolution_factor + 0.1
-			else
-				game.evolution_factor = 0.9999
-			end  
-
-		 -- Biters will attack the newly built Rocket Silo
-		--game.surface.set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
+	if NEConfig.HarderEndGame then
+		if event.created_entity.name == "rocket-silo" then
 		
-		game.player.print("WARNING!")
-		game.player.print("Building a Rocket Silo caused a lot of noise and biter will Attack!!!")
-   end
-  end 
+			global.RocketSiloBuilt = global.RocketSiloBuilt + 1
+			writeDebug("The number of Rocket Silos is: " .. global.RocketSiloBuilt)	
+				-- Increase Evolution factor by 10% once a Rocket Silo is built	
+				if game.evolution_factor < 0.89999 then
+					game.evolution_factor = game.evolution_factor + 0.1
+				else
+					game.evolution_factor = 0.9999
+				end  
+				
+			-- Biters will attack the newly built Rocket Silo
+			event.created_entity.surface.set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
+			--Old Code --game.get_surface(1).set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
+			
+			game.player.print("WARNING!")
+			game.player.print("Building a Rocket Silo caused a lot of noise and biter will Attack!!!")
+		end
+	end 
 
    
    --- Terraforming Station has been built
-   if event.created_entity.name == "TerraformingStation" then
+	if event.created_entity.name == "TerraformingStation" then
       global.numTerraformingStations = global.numTerraformingStations + 1
       
       global.factormultiplier = GetFactorPerTerraformingStation(global.numTerraformingStations)
 	  writeDebug("The the number of Terraforming Stations: " .. global.numTerraformingStations)
 	  
-   end
+	end
+   
    
    --- Alien Control Station has been built
     if event.created_entity.name == "AlienControlStation" then
 		table.insert(global.beacons, event.created_entity)
 	end
+
 	
 	--- Artifact Collector	
-
 	local newCollector
 	
 	if event.created_entity.name == "Artifact-collector-area" then
-
+	local surface = event.created_entity.surface
     local force = event.created_entity.force
 		newCollector = surface.create_entity({name = "Artifact-collector", position = event.created_entity.position, force = force})
 		event.created_entity.destroy()
@@ -189,6 +185,7 @@ function On_Built(event)
 		
 		table.insert(global.ArtifactCollectors, newCollector)
 	end
+	
 end
 
 
@@ -215,8 +212,8 @@ function On_Removed(event)
 	
 end
 
---- Artifact Collector
 
+--- Artifact Collector
 function ticker()
 	if global.ArtifactCollectors ~= nil then
 		if global.ticks == 0 or global.ticks == nil then
@@ -230,7 +227,8 @@ function ticker()
 	end
 end
 
-	--- Artifact Collector
+
+--- Artifact Collector
 function processCollectors()
 	local items
 	local inventory
@@ -261,6 +259,7 @@ function processCollectors()
 	end
 end
 
+
 ---- Removes the Alien Control Station ---
 function ACS_Remove(index)
 
@@ -281,8 +280,8 @@ function ACS_Remove(index)
   
 end
 
---------------- Terraforming Station Calculations ------------------------------
 
+--------------- Terraforming Station Calculations ------------------------------
 function GetFactorPerTerraformingStation(numTerraformingStations)
    local res = 1
    -- Calculate the total evolution reduction.
@@ -298,11 +297,11 @@ end
 
 
 
-
+----------------Radars Scaning Sunction -----------------------------
 game.on_event(defines.events.on_sector_scanned, function(event)
 	
 	---- Each time a Terraforming Station scans a sector, reduce the evolution factor ----	
-	if event.radar.surface.name == "TerraformingStation" then
+	if event.radar.name == "TerraformingStation" then
    
    			if game.evolution_factor > 0.05 then
 				game.evolution_factor = game.evolution_factor - ((0.000125 * global.factormultiplier) * (1 - game.evolution_factor))
@@ -314,36 +313,31 @@ game.on_event(defines.events.on_sector_scanned, function(event)
 	end
 	
 	--- Each time a Thumper "Scans", it will attract biters in the area
-	local surface = event.created_entity.surface   
-	if event.radar.surface.name == "Thumper" then
-   		game.surface.set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},10)
-   		writeDebug("Thumper Scaned, units should attack")   
-	end
-	
+	if event.radar.name == "Thumper" then
+        event.radar.surface.set_multi_command({type=defines.command.attack, target=event.radar, distraction=defines.distraction.by_enemy},10)
+		writeDebug("Thumper Scanned, units should attack")   
+    end   
 	
 end)
---------------- END Terraforming Station ------------------------------
 
 
 --------------- Alien Control Station ---------------------------------
-
 function Control_Enemies()
 
-  --local surface = game.surfaces['nauvis'] 
-  local surface = beacon.surface 
+ -- old code--  local surface = game.surfaces['nauvis']  
   local enemyForce = game.forces.enemy 
   
   for k,beacon in ipairs(global.beacons) do
     if beacon.valid then
-
+	local surface = beacon.surface -- New Code
+	
       if beacon.energy > 0 then
         
 		local bases = surface.find_entities_filtered{type="unit-spawner", area=Get_Bounding_Box(beacon.position, NEConfig.Spawner_Search_Distance)} --search area of thirty around each ACS for spawners
 		
         if #bases > 0 then
           for i, base in ipairs(bases) do
-            if base.force == (enemyForce) and math.random(global.minds.difficulty*2)==1 then --easy = 16.5% chance, normal = 10%, hard = 5%
-             --Convert_Base(base, false)
+            if base.force == (enemyForce) and math.random(global.minds.difficulty*2)==1 then --easy = 16.5% chance, normal = 10%, hard = 5%     
 			 Convert_Base(base, false, beacon.force)
             end
           end
@@ -352,8 +346,7 @@ function Control_Enemies()
 		  for i, enemy in ipairs(surface.find_enemy_units(beacon.position, NEConfig.Unit_Search_Distance)) do --search area of ten around each ACS
 		  
             if enemy.force == (enemyForce) then --do only if not already controlled
-              if math.random(global.minds.difficulty*2)==1 then --easy = 16.5% chance, normal = 10%, hard = 5%
-                --enemy.force=game.player.force
+              if math.random(global.minds.difficulty*2)==1 then --easy = 16.5% chance, normal = 10%, hard = 5%              
                 enemy.force=beacon.force
                 enemy.set_command{type=defines.command.wander,distraction=defines.distraction.by_enemy}
                 table.insert(global.minds, enemy)
@@ -371,9 +364,12 @@ function Control_Enemies()
   end
 end
 
+
+--------------- Alien Control Station ---------------------------------
 function Remove_Mind_Control()
 
-   local surface = beacon.surface
+  local surface = game.surfaces['nauvis'] --- Old Code Need to Fix
+  --local surface = beacon.surface
    local enemyForce = game.forces.enemy 
 	
   if global.beacons[1] then -- if there are valid beacons
@@ -392,10 +388,12 @@ function Remove_Mind_Control()
   end
 end
 
+
+--------------- Alien Control Station ---------------------------------
 function Convert_Base(base, died, newforce)
   
-
-  local surface = base.surface
+  local surface = game.surfaces['nauvis'] -- Old Code, need to fix
+  --local surface = base.surface
   local enemies=Get_Bounding_Box(base.position, NEConfig.Unit_Search_Distance)
   local units={}
   local hives={}
@@ -429,7 +427,8 @@ function Convert_Base(base, died, newforce)
   if count~=0 and math.random(1+math.sqrt(count))==1 then
 
     if died then 
-	  table.insert(global.hiveminds, game.create_entity{name=base.name, position=base.position, force=game.newforce}) --- game.create_entity issue??
+	  table.insert(global.hiveminds, base.surface.create_entity{name=base.name, position=base.position, force=game.newforce}) 
+	  -- table.insert(global.hiveminds, game.create_entity{name=base.name, position=base.position, force=game.newforce}) --- Old Code --- game.create_entity issue
 	end
 	for _, worm in pairs(worms) do 
 
@@ -463,7 +462,7 @@ function Get_Bounding_Box(position, radius)
 	return {{position.x-radius, position.y-radius}, {position.x+radius,position.y+radius}}
 end
 
---------------- END Alien Control Station ------------------------------
+--------------------------------------------
 
 
 
@@ -597,8 +596,9 @@ if NEConfig.Expansion then
 	
 	function Natural_Evolution_SetExpansionLevel(Expansion_State)
 	
-	local surface = event.created_entity.surface   
+	local surface = player.surface
 	local enemy_expansion = game.map_settings.enemy_expansion
+	local unit_group = unit_group
 		Expansion_State = Expansion_State or "Peaceful"
 		
 		if Expansion_State == "Peaceful" then
@@ -648,12 +648,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 60 * 60
 			enemy_expansion.max_expansion_cooldown = 120 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 20.0
-			game.map_settings.unit_group.min_group_radius = 5.0
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 20.0
+			unit_group.min_group_radius = 5.0
+			unit_group.max_member_speedup_when_behind = 1.4
 				
 		
 		elseif Expansion_State == "Phase 1" then
@@ -666,6 +666,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},100)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},100)
 				
 			end  
 			-----
@@ -679,12 +680,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 40 * 60
 			enemy_expansion.max_expansion_cooldown = 60 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 				
 		elseif Expansion_State == "Phase 2" then
@@ -697,6 +698,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},200)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},200)
 				
 			end  
 			-----
@@ -710,12 +712,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 24 * 60
 			enemy_expansion.max_expansion_cooldown = 30 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 				
 		elseif Expansion_State == "Phase 3" then
@@ -728,6 +730,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},400)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},400)
 				
 			end   
 			-----
@@ -741,12 +744,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 20 * 60
 			enemy_expansion.max_expansion_cooldown = 30 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 
 		elseif Expansion_State == "Phase 4" then
@@ -759,6 +762,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},500)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},500)
 				
 			end   
 			-----
@@ -772,12 +776,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 20 * 60
 			enemy_expansion.max_expansion_cooldown = 24 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 				
 		elseif Expansion_State == "Phase 5" then
@@ -790,6 +794,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},600)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},600)
 				
 			end  
 			-----
@@ -803,12 +808,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 20 * 60
 			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)				
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)				
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 				
 		elseif Expansion_State == "Phase 6" then
@@ -821,6 +826,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},700)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},700)
 				
 			end  
 			-----
@@ -834,12 +840,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 15 * 60
 			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 				
 		elseif Expansion_State == "Phase 7" then
@@ -852,6 +858,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},800)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},800)
 				
 			end  
 			-----
@@ -865,12 +872,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 15 * 60
 			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 				
 		elseif Expansion_State == "Phase 8" then
@@ -883,6 +890,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},900)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},900)
 				
 			end  
 			-----
@@ -896,12 +904,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 15 * 60
 			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 
 		elseif Expansion_State == "Phase 9" then
@@ -914,6 +922,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},1000)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},1000)
 				
 			end  
 			-----
@@ -927,12 +936,12 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 15 * 60
 			enemy_expansion.max_expansion_cooldown = 20 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 
 		elseif Expansion_State == "Phase 10" then
@@ -945,6 +954,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
 				
 			end  
 			-----
@@ -958,18 +968,19 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 15 * 60
 			enemy_expansion.max_expansion_cooldown = 20 * 60
 					---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 2)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 10)
 
 			
 		
 		elseif Expansion_State == "Armageddon" then
 			--- During Armageddon state the player will be attached regardless of Silo built or not.
 			game.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
+			--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.none},2000)
 			enemy_expansion.enabled = true					 
 			global.Natural_Evolution_Timer = math.random(6 * 3600, 8 * 3600)
 			enemy_expansion.min_base_spacing = 2
@@ -980,22 +991,22 @@ if NEConfig.Expansion then
 			enemy_expansion.min_expansion_cooldown = 8 * 60
 			enemy_expansion.max_expansion_cooldown = 15 * 60
 				---
-			game.map_settings.unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
-			game.map_settings.unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
-			game.map_settings.unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			game.map_settings.unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 1)
-			game.map_settings.unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 1)
-			game.map_settings.unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 5)
+			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
+			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
+			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
+			unit_group.max_group_radius = 30.0 + (global.Natural_Evolution_Counter / 1)
+			unit_group.min_group_radius = 5.0 + (global.Natural_Evolution_Counter / 1)
+			unit_group.max_member_speedup_when_behind = 1.4 + (global.Natural_Evolution_Counter / 5)
 		
 		end
 
 				
 		if Expansion_State ~= "Peaceful" then
 		writeDebug("Expansion state set to: " .. Expansion_State)	
-		writeDebug("The Max Group Radius is: " .. game.map_settings.unit_group.max_group_radius)
-		writeDebug("The Min Group Gathering time is: " .. game.map_settings.unit_group.min_group_gathering_time)
-		writeDebug("The Max Group Gathering time and N.E. Timer is: " .. game.map_settings.unit_group.max_group_gathering_time)
-		writeDebug("The wait for late member time is: " .. game.map_settings.unit_group.max_wait_time_for_late_members)
+		writeDebug("The Max Group Radius is: " .. unit_group.max_group_radius)
+		writeDebug("The Min Group Gathering time is: " .. unit_group.min_group_gathering_time)
+		writeDebug("The Max Group Gathering time and N.E. Timer is: " .. unit_group.max_group_gathering_time)
+		writeDebug("The wait for late member time is: " .. unit_group.max_wait_time_for_late_members)
 		end
 		
 			

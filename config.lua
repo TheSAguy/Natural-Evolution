@@ -28,6 +28,7 @@ NE.ScienceCost = true --Doubles the cost of Science Bottles, so you need to go l
 
 NE.HarderEndGame = true --Gets a lot harder once you build a rocket silo
 
+
 NE.EvolutionFactor = true 
 -- Do you want to use the new Evolution rate settings of:
 -- TIME: Only 75% of vanilla. From 0.000004 to 0.000003

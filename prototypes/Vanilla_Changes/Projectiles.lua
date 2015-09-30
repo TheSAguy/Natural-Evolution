@@ -47,7 +47,7 @@ data:extend(
           },
           {
             type = "damage",
-            damage = {amount = 10, type = "poison"}
+            damage = {amount = 12, type = "poison"}
           }
         }
       }
@@ -119,7 +119,7 @@ data:extend(
             action =
             {
               type = "area",
-              perimeter = 3,
+              perimeter = 2,
               action_delivery =
               {
                 type = "instant",
@@ -131,7 +131,7 @@ data:extend(
 				  },
 				  {
                     type = "damage",
-                    damage = {amount = 10, type = "acid"}
+                    damage = {amount = 14, type = "acid"}
                   },
                 }
               }
@@ -206,7 +206,7 @@ data:extend(
               target_effects =
               {
                 type = "damage",
-                damage = { amount = 4, type = "poison"}
+                damage = { amount = 6, type = "poison"}
               }
             }
           }

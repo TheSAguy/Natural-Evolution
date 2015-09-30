@@ -69,19 +69,30 @@ if NEConfig.ScienceCost then
 
 
 end
---[[
-local new_resist = {type = "Venom", decrease = 50, percent = 100}
-local exclude = {["player"]=true, ["behemoth-biter"]=true, ["behemoth-spitter"]=true}--you got the idea of how this list should be filled
 
-for category_name, category in pairs(data.raw) do
-    if category_name~='projectile' then --first filter, purely demonstrational
-        for prot_name, prot in pairs(category) do
-            if prot.resistances and not exclude[prot_name] then --second filter
-                 table.insert(prot.resistances,new_resist)
-            end
-        end
-    end
+
+
+function AddVenomResist(Raw,Percent)
+	local Resist = {type = "Venom",percent = Percent}
+	for i,d in pairs(Raw) do
+		if d.resistances ==nil then d.resistances={} end
+		table.insert(d.resistances, Resist)
+	end
 end
 
-]]
+
+if NEConfig.Spawners then
+	--Add resistances to entities.
+	AddVenomResist(data.raw["wall"],100)
+	AddVenomResist(data.raw["gate"],100)
+	AddVenomResist(data.raw["car"],100)
+	AddVenomResist(data.raw["electric-pole"],100)
+	AddVenomResist(data.raw["turret"],100)	
+	AddVenomResist(data.raw["ammo-turret"],100)	
+	AddVenomResist(data.raw["electric-turret"],100)	
+	AddVenomResist(data.raw["rail"],100)	
+	AddVenomResist(data.raw["transport-belt"],100)
+	
+end
+
 
