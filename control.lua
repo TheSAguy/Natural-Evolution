@@ -61,11 +61,18 @@ end)
 function On_Load()
 
  -- Make sure all recipes and technologies are up to date.
+	--[[ New Code
 	for k,v in pairs(game.forces) do 
-		force.reset_recipes() 
+		force.reset_recipes()
 		force.reset_technologies() 
 	end
- 
+	]]
+	--- Old Code
+	for _,player in pairs(game.players) do
+		player.force.reset_recipes()
+		player.force.reset_technologies()
+	end
+
  
 ---- Evolution_MOD
 	if global.Evolution_MOD == nil then
@@ -128,10 +135,11 @@ end
 ---------------------------------------------
 function On_Built(event)
 
-   local surface = event.created_entity.surface   
+     
    --- Harder Ending Some action if you built the Rocket-silo!
   if NEConfig.HarderEndGame then
    if event.created_entity.name == "rocket-silo" then
+		local surface = event.created_entity.surface 
 	  	global.RocketSiloBuilt = global.RocketSiloBuilt + 1
 		writeDebug("The number of Rocket Silos is: " .. global.RocketSiloBuilt)	
 		-- Increase Evolution factor by 10% once a Rocket Silo is built	
@@ -142,7 +150,7 @@ function On_Built(event)
 			end  
 
 		 -- Biters will attack the newly built Rocket Silo
-		game.surface.set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
+		--game.surface.set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
 		
 		game.player.print("WARNING!")
 		game.player.print("Building a Rocket Silo caused a lot of noise and biter will Attack!!!")
@@ -585,10 +593,12 @@ end)
 
 if NEConfig.Expansion then
 	
-	local surface = event.created_entity.surface   
-	local enemy_expansion = game.map_settings.enemy_expansion
+
 	
 	function Natural_Evolution_SetExpansionLevel(Expansion_State)
+	
+	local surface = event.created_entity.surface   
+	local enemy_expansion = game.map_settings.enemy_expansion
 		Expansion_State = Expansion_State or "Peaceful"
 		
 		if Expansion_State == "Peaceful" then

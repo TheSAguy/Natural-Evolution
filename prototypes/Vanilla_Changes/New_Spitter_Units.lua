@@ -1,4 +1,6 @@
 require "prototypes.Vanilla_Changes.Settings"
+require "prototypes.Vanilla_Changes.Functions"
+require "prototypes.Vanilla_Changes.Projectiles"
 
 smallspitterscale = 0.5
 smallspittertint =  {r=0.68, g=0.4, b=0, a=1}

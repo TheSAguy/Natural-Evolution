@@ -72,7 +72,7 @@ data:extend(
       shift = {-0.09, 0.395}
     },
     rotatable = false
-  }
+  },
 
   --- Mutated Projectile
   {
@@ -160,9 +160,9 @@ data:extend(
       shift = {-0.09, 0.395}
     },
     rotatable = false
-  }
+  },
 
-  --- Infeted Poison Cloud
+  --- Infected Poison Cloud
   {
     type = "smoke",
     name = "Infected-Poison-Cloud",

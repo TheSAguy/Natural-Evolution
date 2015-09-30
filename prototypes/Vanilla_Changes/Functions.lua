@@ -139,7 +139,7 @@ function Spitter_Attack_Mutated(data)
         action_delivery =
         {
           type = "projectile",
-          projectile = "berserker-projectile",
+          projectile = "Mutated-Projectile",
           starting_speed = 1.5
         }
       }
