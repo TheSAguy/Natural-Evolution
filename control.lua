@@ -145,7 +145,7 @@ function On_Built(event)
 				
 			-- Biters will attack the newly built Rocket Silo
 			event.created_entity.surface.set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
-			--Old Code --game.get_surface(1).set_multi_command({type=defines.command.attack,target=event.created_entity,distraction=defines.distraction.none},2000)
+			writeDebug("Attack wave inbound")	
 			
 			game.player.print("WARNING!")
 			game.player.print("Building a Rocket Silo caused a lot of noise and biter will Attack!!!")
@@ -430,17 +430,18 @@ function Convert_Base(base, died, newforce)
 	  table.insert(global.hiveminds, base.surface.create_entity{name=base.name, position=base.position, force=game.newforce}) 
 	  -- table.insert(global.hiveminds, game.create_entity{name=base.name, position=base.position, force=game.newforce}) --- Old Code --- game.create_entity issue
 	end
+	
 	for _, worm in pairs(worms) do 
-
 	  worm.force=newforce 
 	  writeDebug("Turret/Worm Converted") 
 	end
-    for _, hive in pairs(hives) do 
-
+    
+	for _, hive in pairs(hives) do 
 	  hive.force=newforce  
 	  table.insert(global.hiveminds, hive) 
 	  writeDebug("Spawner Converted") 
 	end
+	
     for _, unit in pairs(units) do
 
 	  unit.force=newforce
@@ -591,12 +592,9 @@ game.on_event(defines.events.on_tick, function(event)
 end)
 
 if NEConfig.Expansion then
-	
-
-	
+		
 	function Natural_Evolution_SetExpansionLevel(Expansion_State)
 	
-	--local surface = surface.player
 	local enemy_expansion = game.map_settings.enemy_expansion
 	local unit_group = game.map_settings.unit_group
 	
@@ -643,7 +641,7 @@ if NEConfig.Expansion then
 			global.Natural_Evolution_Timer = math.random(2 * 3600, 4 * 3600)
 			enemy_expansion.min_base_spacing = 3
 			enemy_expansion.max_expansion_distance = 5
-			enemy_expansion.min_player_base_distance = 15
+			enemy_expansion.min_player_base_distance = 20
 			enemy_expansion.settler_group_min_size = 2 + global.Natural_Evolution_Counter
 			enemy_expansion.settler_group_max_size = 4 + global.Natural_Evolution_Counter
 			enemy_expansion.min_expansion_cooldown = 60 * 60
@@ -652,7 +650,7 @@ if NEConfig.Expansion then
 			unit_group.min_group_gathering_time = math.floor(global.Natural_Evolution_Timer / 2)
 			unit_group.max_group_gathering_time = global.Natural_Evolution_Timer
 			unit_group.max_wait_time_for_late_members = math.floor(global.Natural_Evolution_Timer / 4)
-			unit_group.max_group_radius = 20.0
+			unit_group.max_group_radius = 10.0
 			unit_group.min_group_radius = 5.0
 			unit_group.max_member_speedup_when_behind = 1.4
 				
@@ -667,8 +665,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},100)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},100)
-				
+				writeDebug("Attack wave inbound")					
 			end  
 			-----
 			enemy_expansion.enabled = true
@@ -699,8 +696,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},200)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},200)
-				
+				writeDebug("Attack wave inbound")					
 			end  
 			-----
 			enemy_expansion.enabled = true
@@ -731,8 +727,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},400)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},400)
-				
+				writeDebug("Attack wave inbound")					
 			end   
 			-----
 			enemy_expansion.enabled = true
@@ -763,8 +758,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},500)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},500)
-				
+				writeDebug("Attack wave inbound")					
 			end   
 			-----
 			enemy_expansion.enabled = true
@@ -795,8 +789,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},600)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},600)
-				
+				writeDebug("Attack wave inbound")					
 			end  
 			-----
 			enemy_expansion.enabled = true
@@ -827,8 +820,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},700)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},700)
-				
+				writeDebug("Attack wave inbound")					
 			end  
 			-----
 			enemy_expansion.enabled = true
@@ -859,8 +851,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},800)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},800)
-				
+				writeDebug("Attack wave inbound")					
 			end  
 			-----
 			enemy_expansion.enabled = true
@@ -891,8 +882,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},900)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},900)
-				
+				writeDebug("Attack wave inbound")					
 			end  
 			-----
 			enemy_expansion.enabled = true
@@ -923,8 +913,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},1000)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},1000)
-				
+				writeDebug("Attack wave inbound")					
 			end  
 			-----
 			enemy_expansion.enabled = true
@@ -955,8 +944,7 @@ if NEConfig.Expansion then
 				end  	
 				---- Attack the player, since you have a silo built
 				game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},2000)
-				--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},2000)
-				
+				writeDebug("Attack wave inbound")					
 			end  
 			-----
 			enemy_expansion.enabled = true
@@ -981,7 +969,8 @@ if NEConfig.Expansion then
 		elseif Expansion_State == "Armageddon" then
 			--- During Armageddon state the player will be attached regardless of Silo built or not.
 			game.player.surface.set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},2000)
-			--game.get_surface(1).set_multi_command({type=defines.command.attack,target=game.player.character,distraction=defines.distraction.by_enemy},2000)
+			writeDebug("Attack wave inbound")	
+			
 			enemy_expansion.enabled = true					 
 			global.Natural_Evolution_Timer = math.random(6 * 3600, 8 * 3600)
 			enemy_expansion.min_base_spacing = 2
@@ -1002,13 +991,13 @@ if NEConfig.Expansion then
 		end
 
 				
-		--if Expansion_State ~= "Peaceful" then
+		if Expansion_State ~= "Peaceful" then
 		writeDebug("Expansion state set to: " .. Expansion_State)	
 		writeDebug("The Max Group Radius is: " .. unit_group.max_group_radius)
 		writeDebug("The Min Group Gathering time is: " .. unit_group.min_group_gathering_time)
 		writeDebug("The Max Group Gathering time and N.E. Timer is: " .. unit_group.max_group_gathering_time)
 		writeDebug("The wait for late member time is: " .. unit_group.max_wait_time_for_late_members)
-		--end
+		end
 		
 			
 	end

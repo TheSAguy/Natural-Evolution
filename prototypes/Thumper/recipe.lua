@@ -9,9 +9,8 @@ data:extend({
 		enabled = "true",
 		ingredients =
         {
-         --   {"Building_Materials", 1},
-			{"iron-plate", 1},
-          --  {"alien-artifact", 10},
+            {"Building_Materials", 1},
+		--	{"iron-plate", 1},
         },
 		result = "Thumper"
 	}, 
