@@ -43,7 +43,7 @@ data:extend(
           },
 		  {
             type = "damage",
-            damage = {amount = 5, type = "Venom"}
+            damage = {amount = 5, type = "explosion"}
           },
           {
             type = "damage",
@@ -127,7 +127,7 @@ data:extend(
                 {
                   {
 					type = "damage",
-					damage = {amount = 5, type = "Venom"}
+					damage = {amount = 5, type = "explosion"}
 				  },
 				  {
                     type = "damage",

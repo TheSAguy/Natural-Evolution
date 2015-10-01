@@ -17,10 +17,6 @@ function Biter_Melee_Attack_Healthy(damagevalue, damagevalue2)
           type = "damage",
           damage = { amount = damagevalue , type = "physical"}
         },
-		{
-          type = "damage",
-          damage = { amount = damagevalue2 , type = "Venom"}
-        }
       }
     }
   }
@@ -48,10 +44,6 @@ function Biter_Melee_Attack_Infected(damagevalue, damagevalue2)
           type = "damage",
           damage = { amount = damagevalue , type = "poison"}
         },
-		{
-          type = "damage",
-          damage = { amount = damagevalue2 , type = "Venom"}
-        }
       }
     }
   }
@@ -79,10 +71,6 @@ function Biter_Melee_Attack_Mutated(damagevalue, damagevalue2)
           type = "damage",
           damage = { amount = damagevalue , type = "acid"}
         },
-		{
-          type = "damage",
-          damage = { amount = damagevalue2 , type = "Venom"}
-        }
       }
     }
   }

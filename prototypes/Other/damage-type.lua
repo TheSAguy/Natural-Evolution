@@ -6,10 +6,4 @@ data:extend({
     name = "Biological"
   },
   
---- Venom Damage, added to biters  
-  {
-    type = "damage-type",
-    name = "Venom"
-  },
-  
 })

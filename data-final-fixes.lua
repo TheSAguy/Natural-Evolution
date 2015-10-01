@@ -182,7 +182,15 @@ if NEConfig.Spawners then
 	data.raw["unit"]["behemoth-spitter"].max_health = Health.Behemoth_Spitter
 	data.raw["unit"]["behemoth-spitter"].pollution_to_join_attack = 5000
 
+	-- Worms
+	data.raw["turret"]["medium-worm-turret"].attack_parameters.ammo_type.action.action_delivery.projectile = "Infected-Projectile"
+	data.raw["turret"]["big-worm-turret"].attack_parameters.ammo_type.action.action_delivery.projectile = "Mutated-Projectile"
+	
 
+end
+	
+	
+	
 -- Bob's Enemies Modifications
 	if NEConfig.mod.BobEnemies then
 
