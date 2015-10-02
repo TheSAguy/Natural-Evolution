@@ -1,7 +1,7 @@
 
 
 ---- Biter Attack Function - Normal Biter
-function Biter_Melee_Attack_Healthy(damagevalue, damagevalue2)
+function Biter_Melee_Attack_Healthy(damagevalue)
   return
   {
     category = "melee",

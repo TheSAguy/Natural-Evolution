@@ -187,8 +187,6 @@ if NEConfig.Spawners then
 	data.raw["turret"]["big-worm-turret"].attack_parameters.ammo_type.action.action_delivery.projectile = "Mutated-Projectile"
 	
 
-end
-	
 	
 	
 -- Bob's Enemies Modifications
